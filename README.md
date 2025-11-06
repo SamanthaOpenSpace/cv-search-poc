@@ -2,9 +2,16 @@
 
 Step 0: Repo scaffold & env only.
 
+
+
 py -3.11 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -e .
+
+# 0) make sure to add .env file with next keys set: 
+OPENAI_API_KEY=sk-proj-*****************
+OPENAI_MODEL=gpt-4.1-mini
+OPENAI_EMBED_MODEL=text-embedding-3-large
 
 # 1) init DB (if not done yet)
 python .\main.py init-db 
@@ -12,17 +19,19 @@ python .\main.py init-db
 # 2) ingest mock CVs // both local db + vector store(upsert)
 python .\main.py ingest-mock 
 
-# 3) parse-request
+# 3) now you can run UI via streamlit or scripts directly 
+
+## 3.1) RUN UI
+streamlit run app.py
+
+## 3.1) parse-request
 python .\main.py parse-request
 
-# 4) search-seat
+## 3.2) search-seat
 python .\main.py search-seat
 
-# 5) search hybrid by default
+## 3.3) search hybrid by default
 python main.py search-seat --criteria ./criteria.json --topk 2
-
-## RUN UI
-streamlit run app.py
 
 ## PRESALE
 
