@@ -1,0 +1,3547 @@
+{
+  "python": [
+    "celery",
+    "cpython",
+    "django",
+    "fastapi",
+    "flask",
+    "ipython",
+    "numpy",
+    "pandas",
+    "py",
+    "py2",
+    "py3",
+    "python",
+    "python 2",
+    "python 3",
+    "python-2",
+    "python-3",
+    "python2",
+    "python3",
+    "scikit learn",
+    "scikit-learn",
+    "sklearn"
+  ],
+  "java": [
+    "jakarta ee",
+    "jakarta-ee",
+    "java",
+    "java ee",
+    "java se",
+    "java-ee",
+    "java-se",
+    "jdk",
+    "jre",
+    "jvm"
+  ],
+  "c": [
+    "ansi c",
+    "ansi-c",
+    "c",
+    "c language",
+    "c-language",
+    "iso c",
+    "iso-c"
+  ],
+  "cpp": [
+    "c plus plus",
+    "c++",
+    "c++11",
+    "c++14",
+    "c++17",
+    "c++20",
+    "c-plus-plus",
+    "cpp",
+    "gnu c++",
+    "gnu-c++",
+    "modern c++",
+    "modern-c++",
+    "qt",
+    "stl"
+  ],
+  "csharp": [
+    "c sharp",
+    "c#",
+    "c#  net",
+    "c# -net",
+    "c# .net",
+    "c# net",
+    "c#- net",
+    "c#--net",
+    "c#-.net",
+    "c#-net",
+    "c-sharp",
+    "csharp",
+    "csharp  net",
+    "csharp -net",
+    "csharp .net",
+    "csharp net",
+    "csharp- net",
+    "csharp--net",
+    "csharp-.net",
+    "csharp-net"
+  ],
+  "dotnet": [
+    "-net",
+    "-net 5",
+    "-net 6",
+    "-net 7",
+    "-net 8",
+    "-net core",
+    "-net framework",
+    "-net standard",
+    "-net-5",
+    "-net-6",
+    "-net-7",
+    "-net-8",
+    "-net-core",
+    "-net-framework",
+    "-net-standard",
+    "-net5",
+    "-net6",
+    "-net7",
+    "-net8",
+    ".net",
+    ".net 5",
+    ".net 6",
+    ".net 7",
+    ".net 8",
+    ".net core",
+    ".net framework",
+    ".net standard",
+    ".net-5",
+    ".net-6",
+    ".net-7",
+    ".net-8",
+    ".net-core",
+    ".net-framework",
+    ".net-standard",
+    ".net5",
+    ".net6",
+    ".net7",
+    ".net8",
+    "asp net",
+    "asp-net",
+    "asp.net",
+    "aspnet",
+    "clr",
+    "common language runtime",
+    "common-language-runtime",
+    "dotnet",
+    "dotnet core",
+    "dotnet framework",
+    "dotnet-core",
+    "dotnet-framework",
+    "microsoft  net",
+    "microsoft -net",
+    "microsoft .net",
+    "microsoft net",
+    "microsoft- net",
+    "microsoft--net",
+    "microsoft-.net",
+    "microsoft-net",
+    "net",
+    "net 5",
+    "net 6",
+    "net 7",
+    "net 8",
+    "net core",
+    "net framework",
+    "net standard",
+    "net-5",
+    "net-6",
+    "net-7",
+    "net-8",
+    "net-core",
+    "net-framework",
+    "net-standard",
+    "net5",
+    "net6",
+    "net7",
+    "net8"
+  ],
+  "javascript": [
+    "ecmascript",
+    "es2015",
+    "es2016",
+    "es2017",
+    "es6",
+    "esnext",
+    "javascript",
+    "js",
+    "vanilla javascript",
+    "vanilla js",
+    "vanilla-javascript",
+    "vanilla-js"
+  ],
+  "typescript": [
+    "ts",
+    "tslang",
+    "type script",
+    "type-script",
+    "typescript",
+    "typescript lang",
+    "typescript-lang"
+  ],
+  "go": [
+    "go",
+    "go lang",
+    "go language",
+    "go-lang",
+    "go-language",
+    "golang",
+    "golang org",
+    "golang-org",
+    "golang.org",
+    "golangorg"
+  ],
+  "rust": [
+    "actix",
+    "cargo",
+    "rust",
+    "rust language",
+    "rust-language",
+    "rustlang",
+    "tokio"
+  ],
+  "ruby": [
+    "mri ruby",
+    "mri-ruby",
+    "rails",
+    "ror",
+    "ruby",
+    "ruby language",
+    "ruby on rails",
+    "ruby-language",
+    "ruby-on-rails"
+  ],
+  "php": [
+    "cakephp",
+    "laravel",
+    "php",
+    "php 7",
+    "php 8",
+    "php fpm",
+    "php-7",
+    "php-8",
+    "php-fpm",
+    "php7",
+    "php8",
+    "symfony",
+    "yii"
+  ],
+  "scala": [
+    "akka",
+    "play framework",
+    "play-framework",
+    "scala",
+    "scala 2",
+    "scala 3",
+    "scala-2",
+    "scala-3"
+  ],
+  "kotlin": [
+    "kotlin",
+    "kotlin jvm",
+    "kotlin language",
+    "kotlin-jvm",
+    "kotlin-language",
+    "ktor"
+  ],
+  "swift": [
+    "swift",
+    "swift language",
+    "swift programming",
+    "swift-language",
+    "swift-programming",
+    "swiftui"
+  ],
+  "objective_c": [
+    "objc",
+    "objective c",
+    "objective c++",
+    "objective-c",
+    "objective-c++"
+  ],
+  "dart": [
+    "dart"
+  ],
+  "elixir": [
+    "elixir",
+    "phoenix framework",
+    "phoenix-framework"
+  ],
+  "erlang": [
+    "erlang"
+  ],
+  "haskell": [
+    "haskell"
+  ],
+  "clojure": [
+    "clojure"
+  ],
+  "ocaml": [
+    "ocaml"
+  ],
+  "r": [
+    "r",
+    "r language",
+    "r-language"
+  ],
+  "matlab": [
+    "matlab"
+  ],
+  "julia": [
+    "julia"
+  ],
+  "perl": [
+    "perl"
+  ],
+  "bash": [
+    "bash",
+    "bash script",
+    "bash scripting",
+    "bash shell",
+    "bash-script",
+    "bash-scripting",
+    "bash-shell",
+    "shell",
+    "shell scripting",
+    "shell-scripting"
+  ],
+  "powershell": [
+    "powershell",
+    "powershell 7",
+    "powershell core",
+    "powershell-7",
+    "powershell-core",
+    "ps",
+    "pwsh",
+    "windows powershell",
+    "windows-powershell"
+  ],
+  "react": [
+    "react",
+    "react hooks",
+    "react js",
+    "react native web",
+    "react-hooks",
+    "react-js",
+    "react-native-web",
+    "react.js",
+    "reactjs",
+    "reactjs org",
+    "reactjs-org",
+    "reactjs.org",
+    "reactjsorg",
+    "redux"
+  ],
+  "nextjs": [
+    "next js",
+    "next-js",
+    "next.js",
+    "nextjs",
+    "nextjs org",
+    "nextjs-org",
+    "nextjs.org",
+    "nextjsorg"
+  ],
+  "redux": [
+    "redux",
+    "redux saga",
+    "redux thunk",
+    "redux toolkit",
+    "redux-saga",
+    "redux-thunk",
+    "redux-toolkit",
+    "rtk"
+  ],
+  "angular": [
+    "angular",
+    "angular 10",
+    "angular 11",
+    "angular 12",
+    "angular 13",
+    "angular 14",
+    "angular 15",
+    "angular 16",
+    "angular 2+",
+    "angular 8",
+    "angular 9",
+    "angular-10",
+    "angular-11",
+    "angular-12",
+    "angular-13",
+    "angular-14",
+    "angular-15",
+    "angular-16",
+    "angular-2+",
+    "angular-8",
+    "angular-9"
+  ],
+  "angularjs": [
+    "angular 1 x",
+    "angular 1-x",
+    "angular 1.x",
+    "angular 1x",
+    "angular-1 x",
+    "angular-1-x",
+    "angular-1.x",
+    "angular-1x",
+    "angularjs",
+    "ng 1 x",
+    "ng 1-x",
+    "ng 1.x",
+    "ng 1x",
+    "ng-1 x",
+    "ng-1-x",
+    "ng-1.x",
+    "ng-1x",
+    "ng1"
+  ],
+  "vue": [
+    "vue",
+    "vue 2",
+    "vue 3",
+    "vue js",
+    "vue-2",
+    "vue-3",
+    "vue-js",
+    "vue.js",
+    "vuejs",
+    "vuejs org",
+    "vuejs-org",
+    "vuejs.org",
+    "vuejsorg"
+  ],
+  "nuxt": [
+    "nuxt",
+    "nuxt 2",
+    "nuxt 3",
+    "nuxt js",
+    "nuxt-2",
+    "nuxt-3",
+    "nuxt-js",
+    "nuxt.js",
+    "nuxtjs",
+    "nuxtjs org",
+    "nuxtjs-org",
+    "nuxtjs.org",
+    "nuxtjsorg"
+  ],
+  "svelte": [
+    "svelte",
+    "sveltekit (svelte core)",
+    "sveltekit-(svelte-core)"
+  ],
+  "sveltekit": [
+    "svelte kit",
+    "svelte-kit",
+    "sveltekit"
+  ],
+  "ember": [
+    "ember",
+    "ember js",
+    "ember-js",
+    "ember.js",
+    "emberjs",
+    "emberjs com",
+    "emberjs-com",
+    "emberjs.com",
+    "emberjscom"
+  ],
+  "backbone": [
+    "backbone",
+    "backbone js",
+    "backbone-js",
+    "backbone.js",
+    "backbonejs",
+    "backbonejs org",
+    "backbonejs-org",
+    "backbonejs.org",
+    "backbonejsorg"
+  ],
+  "jquery": [
+    "jquery",
+    "jquery core",
+    "jquery js",
+    "jquery ui",
+    "jquery-core",
+    "jquery-js",
+    "jquery-ui",
+    "jquery.js",
+    "jqueryjs"
+  ],
+  "lit": [
+    "lit",
+    "lit element",
+    "lit elements",
+    "lit html",
+    "lit-element",
+    "lit-elements",
+    "lit-html",
+    "lit-html templates"
+  ],
+  "astro": [
+    "astro",
+    "astro build",
+    "astro-build",
+    "astro.build",
+    "astrobuild"
+  ],
+  "vite": [
+    "vite",
+    "vite js",
+    "vite-js",
+    "vite.js",
+    "vitejs"
+  ],
+  "webpack": [
+    "webpack",
+    "webpack bundler",
+    "webpack js",
+    "webpack-bundler",
+    "webpack-js",
+    "webpack.js",
+    "webpackjs"
+  ],
+  "rollup": [
+    "rollup",
+    "rollup js",
+    "rollup-js",
+    "rollup.js",
+    "rollupjs"
+  ],
+  "parcel": [
+    "parcel",
+    "parcel js",
+    "parcel-js",
+    "parcel.js",
+    "parceljs"
+  ],
+  "babel": [
+    "babel",
+    "babel js",
+    "babel-js",
+    "babel.js",
+    "babeljs"
+  ],
+  "d3": [
+    "d3",
+    "d3 charts",
+    "d3 js",
+    "d3-charts",
+    "d3-js",
+    "d3.js",
+    "d3js"
+  ],
+  "chartjs": [
+    "chart js",
+    "chart-js",
+    "chart.js",
+    "chartjs"
+  ],
+  "highcharts": [
+    "highcharts",
+    "highcharts js",
+    "highcharts-js"
+  ],
+  "nodejs": [
+    "node",
+    "node js",
+    "node runtime",
+    "node-js",
+    "node-runtime",
+    "node.js",
+    "nodejs",
+    "nodejs runtime",
+    "nodejs-runtime"
+  ],
+  "express": [
+    "express",
+    "express js",
+    "express-js",
+    "express.js",
+    "expressjs"
+  ],
+  "nestjs": [
+    "nest js",
+    "nest-js",
+    "nest.js",
+    "nestjs",
+    "nestjs framework",
+    "nestjs-framework"
+  ],
+  "koa": [
+    "koa",
+    "koa js",
+    "koa-js",
+    "koa.js",
+    "koajs"
+  ],
+  "fastify": [
+    "fastify",
+    "fastify js",
+    "fastify-js",
+    "fastify.js",
+    "fastifyjs"
+  ],
+  "hapi": [
+    "hapi",
+    "hapi js",
+    "hapi server",
+    "hapi-js",
+    "hapi-server",
+    "hapi.js",
+    "hapijs"
+  ],
+  "flask": [
+    "flask",
+    "flask microframework",
+    "flask-microframework"
+  ],
+  "django": [
+    "django",
+    "django rest framework",
+    "django-rest-framework",
+    "drf"
+  ],
+  "fastapi": [
+    "fast api",
+    "fast-api",
+    "fastapi"
+  ],
+  "celery": [
+    "celery",
+    "python celery",
+    "python-celery",
+    "task queue",
+    "task-queue"
+  ],
+  "rails": [
+    "rails",
+    "ror",
+    "ruby on rails",
+    "ruby-on-rails"
+  ],
+  "laravel": [
+    "laravel"
+  ],
+  "symfony": [
+    "symfony"
+  ],
+  "spring": [
+    "spring"
+  ],
+  "spring_boot": [
+    "spring boot",
+    "spring-boot"
+  ],
+  "hibernate": [
+    "hibernate"
+  ],
+  "quarkus": [
+    "quarkus",
+    "quarkus framework",
+    "quarkus-framework",
+    "red hat quarkus",
+    "red-hat-quarkus"
+  ],
+  "micronaut": [
+    "micronaut",
+    "micronaut framework",
+    "micronaut-framework"
+  ],
+  "play_framework": [
+    "play",
+    "play framework",
+    "play-framework",
+    "playframework"
+  ],
+  "phoenix": [
+    "elixir phoenix",
+    "elixir-phoenix",
+    "phoenix",
+    "phoenix framework",
+    "phoenix-framework"
+  ],
+  "gin": [
+    "gin",
+    "gin gonic",
+    "gin-gonic"
+  ],
+  "echo": [
+    "echo",
+    "echo framework",
+    "echo-framework",
+    "labstack echo",
+    "labstack-echo"
+  ],
+  "fiber": [
+    "fiber",
+    "fiber framework",
+    "fiber-framework",
+    "go fiber",
+    "go-fiber"
+  ],
+  "aspnet": [
+    "asp  net",
+    "asp -net",
+    "asp .net",
+    "asp net",
+    "asp net mvc",
+    "asp net web api",
+    "asp net-mvc",
+    "asp net-web-api",
+    "asp- net",
+    "asp--net",
+    "asp-.net",
+    "asp-net",
+    "asp-net mvc",
+    "asp-net web api",
+    "asp-net-mvc",
+    "asp-net-web-api",
+    "asp.net",
+    "asp.net mvc",
+    "asp.net web api",
+    "asp.net-mvc",
+    "asp.net-web-api",
+    "aspnet",
+    "aspnet forms",
+    "aspnet mvc",
+    "aspnet web api",
+    "aspnet-forms",
+    "aspnet-mvc",
+    "aspnet-web-api",
+    "webforms"
+  ],
+  "aspnet_core": [
+    "asp  net core",
+    "asp -net core",
+    "asp .net core",
+    "asp core",
+    "asp net core",
+    "asp net core mvc",
+    "asp net core web api",
+    "asp net-core-mvc",
+    "asp net-core-web-api",
+    "asp- net-core",
+    "asp--net-core",
+    "asp-.net-core",
+    "asp-core",
+    "asp-net core",
+    "asp-net core mvc",
+    "asp-net core web api",
+    "asp-net-core",
+    "asp-net-core-mvc",
+    "asp-net-core-web-api",
+    "asp.net core",
+    "asp.net core mvc",
+    "asp.net core web api",
+    "asp.net-core",
+    "asp.net-core-mvc",
+    "asp.net-core-web-api",
+    "aspnet core",
+    "aspnet core mvc",
+    "aspnet core web api",
+    "aspnet-core",
+    "aspnet-core-mvc",
+    "aspnet-core-web-api",
+    "aspnetcore"
+  ],
+  "ktor": [
+    "ktor",
+    "ktor framework",
+    "ktor-framework"
+  ],
+  "vertx": [
+    "eclipse vertx",
+    "eclipse-vertx",
+    "vert x",
+    "vert-x",
+    "vert.x",
+    "vertx"
+  ],
+  "tomcat": [
+    "apache tomcat",
+    "apache-tomcat",
+    "tomcat",
+    "tomcat server",
+    "tomcat-server"
+  ],
+  "jetty": [
+    "jetty",
+    "jetty server",
+    "jetty-server"
+  ],
+  "wildfly": [
+    "jboss",
+    "jboss eap",
+    "jboss-eap",
+    "wildfly"
+  ],
+  "weblogic": [
+    "oracle weblogic",
+    "oracle-weblogic",
+    "weblogic",
+    "weblogic server",
+    "weblogic-server"
+  ],
+  "websphere": [
+    "ibm websphere",
+    "ibm-websphere",
+    "websphere",
+    "websphere application server",
+    "websphere-application-server"
+  ],
+  "android": [
+    "android",
+    "android development",
+    "android sdk",
+    "android-development",
+    "android-sdk",
+    "jetpack",
+    "native android",
+    "native-android"
+  ],
+  "jetpack_compose": [
+    "android compose",
+    "android-compose",
+    "compose",
+    "compose ui",
+    "compose-ui",
+    "jetpack compose",
+    "jetpack-compose"
+  ],
+  "kotlin_multiplatform": [
+    "kmm",
+    "kotlin mpp",
+    "kotlin multiplatform",
+    "kotlin-mpp",
+    "kotlin-multiplatform"
+  ],
+  "ios": [
+    "cocoa touch",
+    "cocoa-touch",
+    "ios",
+    "iphone os",
+    "iphone-os"
+  ],
+  "swiftui": [
+    "swift ui",
+    "swift-ui",
+    "swiftui"
+  ],
+  "xcode": [
+    "apple xcode",
+    "apple-xcode",
+    "xcode",
+    "xcode ide",
+    "xcode-ide"
+  ],
+  "react_native": [
+    "react native",
+    "react-native",
+    "rn"
+  ],
+  "flutter": [
+    "dart flutter",
+    "dart-flutter",
+    "flutter"
+  ],
+  "xamarin": [
+    "-net maui",
+    ".net maui",
+    ".net-maui",
+    "maui",
+    "maui  net",
+    "maui -net",
+    "maui .net",
+    "maui net",
+    "maui- net",
+    "maui--net",
+    "maui-.net",
+    "maui-net",
+    "microsoft maui",
+    "microsoft-maui",
+    "net maui",
+    "xamarin",
+    "xamarin android",
+    "xamarin forms",
+    "xamarin ios",
+    "xamarin-android",
+    "xamarin-forms",
+    "xamarin-ios",
+    "xamarin.forms",
+    "xamarinforms"
+  ],
+  "ionic": [
+    "ionic",
+    "ionic framework",
+    "ionic-framework"
+  ],
+  "capacitor": [
+    "capacitor",
+    "capacitor js",
+    "capacitor-js",
+    "capacitorjs"
+  ],
+  "cordova": [
+    "apache cordova",
+    "apache-cordova",
+    "cordova"
+  ],
+  "html": [
+    "html",
+    "html5"
+  ],
+  "css": [
+    "cascading style sheets",
+    "cascading-style-sheets",
+    "css",
+    "css3"
+  ],
+  "sass": [
+    "sass"
+  ],
+  "scss": [
+    "scss"
+  ],
+  "less": [
+    "less"
+  ],
+  "tailwindcss": [
+    "tailwind",
+    "tailwind css",
+    "tailwind ui",
+    "tailwind-css",
+    "tailwind-ui",
+    "tailwindcss"
+  ],
+  "bootstrap": [
+    "bootstrap",
+    "twitter bootstrap",
+    "twitter-bootstrap"
+  ],
+  "sql": [
+    "ansi sql",
+    "ansi-sql",
+    "sql",
+    "structured query language",
+    "structured-query-language"
+  ],
+  "t_sql": [
+    "t sql",
+    "t-sql"
+  ],
+  "pl_sql": [
+    "pl sql",
+    "pl-sql",
+    "pl/sql"
+  ],
+  "postgresql": [
+    "pgsql",
+    "postgre",
+    "postgre sql",
+    "postgre-sql",
+    "postgres",
+    "postgresql",
+    "postgresql db",
+    "postgresql-db",
+    "psql"
+  ],
+  "mysql": [
+    "my sql",
+    "my-sql",
+    "mysql",
+    "mysql server",
+    "mysql-server"
+  ],
+  "mariadb": [
+    "maria db",
+    "maria-db",
+    "mariadb"
+  ],
+  "sql_server": [
+    "microsoft sql",
+    "microsoft sql server",
+    "microsoft-sql",
+    "microsoft-sql-server",
+    "ms sql",
+    "ms sql server",
+    "ms-sql",
+    "ms-sql-server",
+    "mssql",
+    "sql server",
+    "sql-server",
+    "sqlserver"
+  ],
+  "oracle": [
+    "oracle",
+    "oracle database",
+    "oracle database server",
+    "oracle db",
+    "oracle rdbms",
+    "oracle-database",
+    "oracle-database-server",
+    "oracle-db",
+    "oracle-rdbms"
+  ],
+  "sqlite": [
+    "sqlite",
+    "sqlite3"
+  ],
+  "snowflake": [
+    "snowflake",
+    "snowflake db",
+    "snowflake sql",
+    "snowflake sql warehouse",
+    "snowflake warehouse",
+    "snowflake-db",
+    "snowflake-sql",
+    "snowflake-sql-warehouse",
+    "snowflake-warehouse"
+  ],
+  "redshift": [
+    "amazon redshift",
+    "amazon redshift dw",
+    "amazon-redshift",
+    "amazon-redshift-dw",
+    "aws redshift",
+    "aws-redshift",
+    "redshift"
+  ],
+  "bigquery": [
+    "bigquery",
+    "google bigquery",
+    "google bigquery sql",
+    "google-bigquery",
+    "google-bigquery-sql"
+  ],
+  "clickhouse": [
+    "click house",
+    "click-house",
+    "clickhouse"
+  ],
+  "timescaledb": [
+    "timescale",
+    "timescale db",
+    "timescale-db",
+    "timescaledb"
+  ],
+  "influxdb": [
+    "influx db",
+    "influx time series db",
+    "influx time-series",
+    "influx-db",
+    "influx-time-series-db",
+    "influxdb"
+  ],
+  "couchdb": [
+    "apache couchdb",
+    "apache-couchdb",
+    "couch db",
+    "couch-db",
+    "couchdb"
+  ],
+  "couchbase": [
+    "couch base",
+    "couch-base",
+    "couchbase",
+    "couchbase server",
+    "couchbase-server"
+  ],
+  "mongodb": [
+    "mongo",
+    "mongo db",
+    "mongo-db",
+    "mongodb"
+  ],
+  "redis": [
+    "redis",
+    "redis cache",
+    "redis server",
+    "redis stack",
+    "redis streams",
+    "redis-cache",
+    "redis-server",
+    "redis-stack",
+    "redis-streams"
+  ],
+  "cassandra": [
+    "apache cassandra db",
+    "apache-cassandra-db",
+    "cassandra"
+  ],
+  "dynamodb": [
+    "amazon dynamodb",
+    "amazon-dynamodb",
+    "aws dynamodb",
+    "aws-dynamodb",
+    "dynamo db",
+    "dynamo-db",
+    "dynamodb"
+  ],
+  "neo4j": [
+    "graph db",
+    "graph-db",
+    "neo 4j",
+    "neo-4j",
+    "neo4j",
+    "neo4j graph",
+    "neo4j-graph"
+  ],
+  "janusgraph": [
+    "janus graph",
+    "janus-graph",
+    "janusgraph",
+    "janusgraph db",
+    "janusgraph-db"
+  ],
+  "arangodb": [
+    "arango database",
+    "arango db",
+    "arango-database",
+    "arango-db",
+    "arangodb",
+    "arangodb database",
+    "arangodb-database"
+  ],
+  "elasticsearch": [
+    "elastic",
+    "elastic search",
+    "elastic stack",
+    "elastic-search",
+    "elastic-stack",
+    "elasticsearch",
+    "elasticsearch stack",
+    "elasticsearch-stack",
+    "elk"
+  ],
+  "opensearch": [
+    "amazon opensearch service",
+    "amazon-opensearch-service",
+    "open search",
+    "open-search",
+    "opensearch"
+  ],
+  "solr": [
+    "apache solr",
+    "apache solr search",
+    "apache-solr",
+    "apache-solr-search",
+    "solr"
+  ],
+  "firestore": [
+    "cloud firestore",
+    "cloud-firestore",
+    "firestore",
+    "firestore db",
+    "firestore-db",
+    "google firestore",
+    "google-firestore"
+  ],
+  "spanner": [
+    "cloud spanner",
+    "cloud spanner db",
+    "cloud-spanner",
+    "cloud-spanner-db",
+    "google spanner",
+    "google-spanner",
+    "spanner"
+  ],
+  "kafka": [
+    "apache kafka",
+    "apache-kafka",
+    "confluent",
+    "confluent kafka",
+    "confluent-kafka",
+    "kafka",
+    "kafka cluster",
+    "kafka connect",
+    "kafka streams",
+    "kafka-cluster",
+    "kafka-connect",
+    "kafka-streams",
+    "ksqldb"
+  ],
+  "rabbitmq": [
+    "amqp broker",
+    "amqp-broker",
+    "rabbit mq",
+    "rabbit-mq",
+    "rabbitmq"
+  ],
+  "activemq": [
+    "activemq",
+    "apache activemq",
+    "apache-activemq"
+  ],
+  "pulsar": [
+    "apache pulsar",
+    "apache-pulsar",
+    "pulsar",
+    "pulsar io",
+    "pulsar-io"
+  ],
+  "nats": [
+    "nats",
+    "nats io",
+    "nats messaging",
+    "nats-io",
+    "nats-messaging",
+    "nats.io",
+    "natsio"
+  ],
+  "mqtt": [
+    "mqtt",
+    "mqtt broker",
+    "mqtt-broker"
+  ],
+  "sqs": [
+    "amazon simple queue service",
+    "amazon sqs",
+    "amazon-simple-queue-service",
+    "amazon-sqs",
+    "aws sqs",
+    "aws-sqs",
+    "simple queue service",
+    "simple-queue-service",
+    "sqs"
+  ],
+  "kinesis": [
+    "amazon kinesis",
+    "amazon-kinesis",
+    "aws kinesis",
+    "aws-kinesis",
+    "firehose",
+    "kinesis",
+    "kinesis data firehose",
+    "kinesis data streams",
+    "kinesis-data-firehose",
+    "kinesis-data-streams"
+  ],
+  "spark": [
+    "apache spark",
+    "apache-spark",
+    "spark",
+    "spark core",
+    "spark mllib",
+    "spark sql",
+    "spark streaming",
+    "spark-core",
+    "spark-mllib",
+    "spark-sql",
+    "spark-streaming"
+  ],
+  "pyspark": [
+    "py spark",
+    "py-spark",
+    "pyspark"
+  ],
+  "databricks": [
+    "databricks",
+    "databricks workspace",
+    "databricks-workspace",
+    "lakehouse"
+  ],
+  "delta_lake": [
+    "delta lake",
+    "delta lake table",
+    "delta tables",
+    "delta-lake",
+    "delta-lake-table",
+    "delta-tables",
+    "deltalake"
+  ],
+  "flink": [
+    "apache flink",
+    "apache-flink",
+    "flink",
+    "flink streaming",
+    "flink-streaming"
+  ],
+  "beam": [
+    "apache beam",
+    "apache beam sdk",
+    "apache-beam",
+    "apache-beam-sdk",
+    "beam"
+  ],
+  "storm": [
+    "apache storm",
+    "apache-storm",
+    "storm"
+  ],
+  "presto": [
+    "presto",
+    "presto sql",
+    "presto-sql",
+    "prestodb",
+    "prestosql"
+  ],
+  "trino": [
+    "trino",
+    "trino db",
+    "trino sql",
+    "trino-db",
+    "trino-sql"
+  ],
+  "hadoop": [
+    "apache hadoop",
+    "apache-hadoop",
+    "hadoop",
+    "hadoop ecosystem",
+    "hadoop-ecosystem"
+  ],
+  "hdfs": [
+    "hadoop distributed file system",
+    "hadoop-distributed-file-system",
+    "hdfs"
+  ],
+  "yarn": [
+    "yarn",
+    "yet another resource negotiator",
+    "yet-another-resource-negotiator"
+  ],
+  "mapreduce": [
+    "hadoop mapreduce",
+    "hadoop-mapreduce",
+    "mapreduce"
+  ],
+  "hive": [
+    "apache hive",
+    "apache-hive",
+    "hive"
+  ],
+  "pig": [
+    "apache pig",
+    "apache-pig",
+    "pig"
+  ],
+  "airbyte": [
+    "airbyte",
+    "airbyte io",
+    "airbyte-io"
+  ],
+  "fivetran": [
+    "five tran",
+    "five-tran",
+    "fivetran"
+  ],
+  "stitch": [
+    "stitch",
+    "stitch data",
+    "stitch-data",
+    "stitchdata"
+  ],
+  "matillion": [
+    "matillion"
+  ],
+  "airflow": [
+    "airflow",
+    "airflow dag",
+    "airflow scheduler",
+    "airflow-dag",
+    "airflow-scheduler",
+    "apache airflow",
+    "apache-airflow"
+  ],
+  "prefect": [
+    "prefect",
+    "prefect 2",
+    "prefect flows",
+    "prefect-2",
+    "prefect-flows"
+  ],
+  "dagster": [
+    "dagster",
+    "dagster pipelines",
+    "dagster-pipelines"
+  ],
+  "dbt": [
+    "data build tool",
+    "data-build-tool",
+    "dbt",
+    "dbt cloud",
+    "dbt core",
+    "dbt-cloud",
+    "dbt-core"
+  ],
+  "informatica": [
+    "informatica",
+    "informatica cloud",
+    "informatica powercenter",
+    "informatica-cloud",
+    "informatica-powercenter"
+  ],
+  "talend": [
+    "talend",
+    "talend open studio",
+    "talend-open-studio"
+  ],
+  "pentaho": [
+    "kettle",
+    "pentaho",
+    "pentaho data integration",
+    "pentaho-data-integration"
+  ],
+  "elt": [
+    "elt",
+    "extract load transform",
+    "extract-load-transform"
+  ],
+  "etl": [
+    "etl",
+    "extract transform load",
+    "extract-transform-load"
+  ],
+  "machine_learning": [
+    "machine learning",
+    "machine-learning",
+    "ml"
+  ],
+  "deep_learning": [
+    "deep learning",
+    "deep-learning"
+  ],
+  "scikit_learn": [
+    "sci-kit learn",
+    "scikit learn",
+    "scikit-learn",
+    "sk learn",
+    "sk-learn",
+    "sklearn"
+  ],
+  "pytorch": [
+    "pytorch",
+    "torch"
+  ],
+  "tensorflow": [
+    "tensorflow",
+    "tf keras",
+    "tf-keras"
+  ],
+  "keras": [
+    "keras",
+    "tf-keras"
+  ],
+  "xgboost": [
+    "xgboost"
+  ],
+  "lightgbm": [
+    "light gbm",
+    "light-gbm",
+    "lightgbm"
+  ],
+  "catboost": [
+    "cat boost",
+    "cat-boost",
+    "catboost"
+  ],
+  "huggingface": [
+    "hf",
+    "hugging face",
+    "hugging-face",
+    "huggingface",
+    "transformers"
+  ],
+  "spacy": [
+    "spacy"
+  ],
+  "nltk": [
+    "nltk"
+  ],
+  "gensim": [
+    "gensim"
+  ],
+  "opencv": [
+    "open cv",
+    "open-cv",
+    "opencv"
+  ],
+  "yolo": [
+    "yolo",
+    "yolov5",
+    "yolov7",
+    "yolov8",
+    "you only look once",
+    "you-only-look-once"
+  ],
+  "detectron2": [
+    "detectron",
+    "detectron2"
+  ],
+  "mediapipe": [
+    "media pipe",
+    "media-pipe",
+    "mediapipe"
+  ],
+  "torchvision": [
+    "torch vision",
+    "torch-vision",
+    "torchvision"
+  ],
+  "torchaudio": [
+    "torch audio",
+    "torch-audio",
+    "torchaudio"
+  ],
+  "mlops": [
+    "ml ops",
+    "ml-ops",
+    "mlops"
+  ],
+  "mlflow": [
+    "ml flow",
+    "ml-flow",
+    "mlflow"
+  ],
+  "dvc": [
+    "data version control",
+    "data-version-control",
+    "dvc",
+    "dvc tool",
+    "dvc-tool"
+  ],
+  "wandb": [
+    "w&b",
+    "wandb",
+    "weights & biases",
+    "weights and biases",
+    "weights-&-biases",
+    "weights-and-biases",
+    "weightsandbiases"
+  ],
+  "sagemaker": [
+    "amazon sagemaker",
+    "amazon-sagemaker",
+    "aws sagemaker",
+    "aws-sagemaker",
+    "sagemaker"
+  ],
+  "vertex_ai": [
+    "gcp vertex ai",
+    "gcp-vertex-ai",
+    "google vertex ai",
+    "google-vertex-ai",
+    "vertex ai",
+    "vertex-ai",
+    "vertexai"
+  ],
+  "azure_ml": [
+    "azure machine learning",
+    "azure ml",
+    "azure-machine-learning",
+    "azure-ml",
+    "azureml"
+  ],
+  "kubeflow": [
+    "kube flow",
+    "kube-flow",
+    "kubeflow"
+  ],
+  "feast": [
+    "feast",
+    "feast feature store",
+    "feast-feature-store",
+    "feature store",
+    "feature-store"
+  ],
+  "rest": [
+    "rest",
+    "rest api",
+    "rest-api",
+    "restful",
+    "restful api",
+    "restful-api"
+  ],
+  "openapi": [
+    "openapi",
+    "swagger",
+    "swagger spec",
+    "swagger ui",
+    "swagger-spec",
+    "swagger-ui"
+  ],
+  "grpc": [
+    "g rpc",
+    "g-rpc",
+    "grpc"
+  ],
+  "graphql": [
+    "graph ql",
+    "graph-ql",
+    "graphql"
+  ],
+  "apollo_graphql": [
+    "apollo",
+    "apollo client",
+    "apollo graphql",
+    "apollo server",
+    "apollo-client",
+    "apollo-graphql",
+    "apollo-server"
+  ],
+  "websocket": [
+    "web sockets",
+    "web-sockets",
+    "websocket",
+    "websockets"
+  ],
+  "socketio": [
+    "socket io",
+    "socket-io",
+    "socket.io",
+    "socketio"
+  ],
+  "aws": [
+    "amazon cloud",
+    "amazon web services",
+    "amazon-cloud",
+    "amazon-web-services",
+    "aws",
+    "aws cloud",
+    "aws-cloud"
+  ],
+  "aws_ec2": [
+    "amazon ec2",
+    "amazon-ec2",
+    "aws ec2",
+    "aws-ec2",
+    "ec2",
+    "ec2 instances",
+    "ec2-instances"
+  ],
+  "aws_s3": [
+    "amazon s3",
+    "amazon-s3",
+    "aws s3",
+    "aws-s3",
+    "s3",
+    "simple storage service",
+    "simple-storage-service"
+  ],
+  "aws_rds": [
+    "amazon rds",
+    "amazon-rds",
+    "aws rds",
+    "aws-rds",
+    "rds",
+    "relational database service",
+    "relational-database-service"
+  ],
+  "aws_aurora": [
+    "amazon aurora",
+    "amazon-aurora",
+    "aurora",
+    "aws aurora",
+    "aws-aurora"
+  ],
+  "aws_lambda": [
+    "aws lambda",
+    "aws-lambda",
+    "lambda",
+    "lambda functions",
+    "lambda-functions"
+  ],
+  "aws_dynamodb": [
+    "amazon dynamodb",
+    "amazon-dynamodb",
+    "aws dynamodb",
+    "aws-dynamodb",
+    "dynamodb"
+  ],
+  "aws_sns": [
+    "amazon sns",
+    "amazon-sns",
+    "aws sns",
+    "aws-sns",
+    "sns"
+  ],
+  "aws_sqs": [
+    "amazon sqs",
+    "amazon-sqs",
+    "aws sqs",
+    "aws-sqs",
+    "sqs"
+  ],
+  "aws_api_gateway": [
+    "amazon api gateway",
+    "amazon-api-gateway",
+    "api gateway",
+    "api-gateway",
+    "aws api gateway",
+    "aws-api-gateway"
+  ],
+  "aws_cloudformation": [
+    "aws cloudformation",
+    "aws-cloudformation",
+    "cloud formation",
+    "cloud-formation",
+    "cloudformation"
+  ],
+  "aws_cdk": [
+    "aws cdk",
+    "aws-cdk",
+    "cdk",
+    "cloud development kit",
+    "cloud-development-kit"
+  ],
+  "aws_ecr": [
+    "aws ecr",
+    "aws-ecr",
+    "ecr",
+    "ecr registry",
+    "ecr-registry",
+    "elastic container registry",
+    "elastic-container-registry"
+  ],
+  "aws_ecs": [
+    "aws ecs",
+    "aws-ecs",
+    "ecs",
+    "ecs fargate",
+    "ecs-fargate",
+    "elastic container service",
+    "elastic-container-service"
+  ],
+  "aws_eks": [
+    "aws eks",
+    "aws-eks",
+    "eks",
+    "eks cluster",
+    "eks-cluster",
+    "elastic kubernetes service",
+    "elastic-kubernetes-service"
+  ],
+  "aws_athena": [
+    "amazon athena",
+    "amazon-athena",
+    "athena",
+    "aws athena",
+    "aws-athena"
+  ],
+  "aws_glue": [
+    "aws glue",
+    "aws-glue",
+    "glue",
+    "glue etl",
+    "glue-etl"
+  ],
+  "aws_emr": [
+    "aws emr",
+    "aws-emr",
+    "elastic map reduce",
+    "elastic mapreduce",
+    "elastic-map-reduce",
+    "elastic-mapreduce",
+    "emr"
+  ],
+  "aws_kinesis": [
+    "aws kinesis",
+    "aws-kinesis",
+    "kinesis"
+  ],
+  "aws_redshift": [
+    "aws redshift",
+    "aws-redshift",
+    "redshift"
+  ],
+  "aws_cloudwatch": [
+    "aws cloudwatch",
+    "aws-cloudwatch",
+    "cloud watch",
+    "cloud-watch",
+    "cloudwatch"
+  ],
+  "aws_iam": [
+    "aws iam",
+    "aws-iam",
+    "iam",
+    "identity and access management",
+    "identity-and-access-management"
+  ],
+  "aws_kms": [
+    "aws kms",
+    "aws-kms",
+    "key management service",
+    "key-management-service",
+    "kms"
+  ],
+  "aws_route53": [
+    "aws route53",
+    "aws-route53",
+    "route 53",
+    "route-53",
+    "route53",
+    "route53 dns",
+    "route53-dns"
+  ],
+  "aws_vpc": [
+    "aws vpc",
+    "aws-vpc",
+    "virtual private cloud",
+    "virtual-private-cloud",
+    "vpc"
+  ],
+  "aws_elb": [
+    "aws elb",
+    "aws-elb",
+    "elastic load balancer",
+    "elastic load balancing",
+    "elastic-load-balancer",
+    "elastic-load-balancing",
+    "elb"
+  ],
+  "aws_alb": [
+    "alb",
+    "application load balancer",
+    "application-load-balancer",
+    "aws alb",
+    "aws-alb"
+  ],
+  "aws_secrets_manager": [
+    "aws secrets manager",
+    "aws-secrets-manager",
+    "secrets manager",
+    "secrets-manager",
+    "secretsmanager"
+  ],
+  "aws_ssm": [
+    "aws ssm",
+    "aws-ssm",
+    "ssm",
+    "systems manager",
+    "systems manager ssm",
+    "systems-manager",
+    "systems-manager-ssm"
+  ],
+  "azure": [
+    "azure",
+    "microsoft azure",
+    "microsoft-azure",
+    "ms azure",
+    "ms-azure"
+  ],
+  "azure_aks": [
+    "aks",
+    "aks cluster",
+    "aks-cluster",
+    "azure aks",
+    "azure kubernetes service",
+    "azure-aks",
+    "azure-kubernetes-service"
+  ],
+  "azure_app_service": [
+    "app service",
+    "app services",
+    "app-service",
+    "app-services",
+    "azure app service",
+    "azure-app-service",
+    "web apps",
+    "web-apps"
+  ],
+  "azure_functions": [
+    "azure functions",
+    "azure-functions",
+    "functions",
+    "functions as a service",
+    "functions-as-a-service"
+  ],
+  "azure_cosmos_db": [
+    "azure cosmos db",
+    "azure-cosmos-db",
+    "cosmos db",
+    "cosmos-db",
+    "cosmosdb"
+  ],
+  "azure_service_bus": [
+    "azure service bus",
+    "azure-service-bus",
+    "service bus",
+    "service bus queue",
+    "service-bus",
+    "service-bus-queue"
+  ],
+  "azure_event_hubs": [
+    "azure event hubs",
+    "azure-event-hubs",
+    "event hub",
+    "event hubs",
+    "event-hub",
+    "event-hubs"
+  ],
+  "azure_ad": [
+    "aad",
+    "azure active directory",
+    "azure ad",
+    "azure-active-directory",
+    "azure-ad",
+    "entra id",
+    "entra-id",
+    "microsoft entra id",
+    "microsoft-entra-id"
+  ],
+  "azure_synapse": [
+    "azure synapse",
+    "azure-synapse",
+    "synapse analytics",
+    "synapse analytics workspace",
+    "synapse-analytics",
+    "synapse-analytics-workspace"
+  ],
+  "azure_databricks": [
+    "azure databricks",
+    "azure-databricks",
+    "databricks on azure",
+    "databricks-on-azure"
+  ],
+  "azure_storage": [
+    "azure blob storage",
+    "azure storage",
+    "azure-blob-storage",
+    "azure-storage",
+    "blob storage",
+    "blob-storage",
+    "storage account",
+    "storage-account"
+  ],
+  "azure_sql": [
+    "azure sql",
+    "azure sql database",
+    "azure sql db",
+    "azure-sql",
+    "azure-sql-database",
+    "azure-sql-db",
+    "sql azure",
+    "sql-azure"
+  ],
+  "azure_devops": [
+    "azure devops",
+    "azure devops pipelines",
+    "azure pipelines",
+    "azure-devops",
+    "azure-devops-pipelines",
+    "azure-pipelines"
+  ],
+  "azure_key_vault": [
+    "azure key vault",
+    "azure-key-vault",
+    "key vault",
+    "key-vault",
+    "keyvault"
+  ],
+  "gcp": [
+    "gcp",
+    "google cloud",
+    "google cloud platform",
+    "google-cloud",
+    "google-cloud-platform"
+  ],
+  "gcp_compute_engine": [
+    "compute engine",
+    "compute-engine",
+    "gce",
+    "gcp compute engine",
+    "gcp-compute-engine",
+    "google compute engine",
+    "google-compute-engine"
+  ],
+  "gcp_gke": [
+    "gcp gke",
+    "gcp-gke",
+    "gke",
+    "gke cluster",
+    "gke-cluster",
+    "google kubernetes engine",
+    "google-kubernetes-engine"
+  ],
+  "gcp_cloud_run": [
+    "cloud run",
+    "cloud run service",
+    "cloud-run",
+    "cloud-run-service",
+    "gcp cloud run",
+    "gcp-cloud-run"
+  ],
+  "gcp_cloud_functions": [
+    "cloud functions",
+    "cloud-functions",
+    "gcf",
+    "gcp cloud functions",
+    "gcp-cloud-functions",
+    "google cloud functions",
+    "google-cloud-functions"
+  ],
+  "gcp_cloud_storage": [
+    "cloud storage",
+    "cloud-storage",
+    "gcp cloud storage",
+    "gcp-cloud-storage",
+    "gcs",
+    "gcs bucket",
+    "gcs-bucket"
+  ],
+  "gcp_bigquery": [
+    "bigquery",
+    "bigquery sql",
+    "bigquery-sql",
+    "gcp bigquery",
+    "gcp-bigquery"
+  ],
+  "gcp_pubsub": [
+    "gcp pubsub",
+    "gcp-pubsub",
+    "google pubsub",
+    "google-pubsub",
+    "pub/sub",
+    "pubsub"
+  ],
+  "gcp_dataflow": [
+    "apache beam dataflow",
+    "apache-beam-dataflow",
+    "dataflow",
+    "gcp dataflow",
+    "gcp-dataflow"
+  ],
+  "gcp_dataproc": [
+    "dataproc",
+    "gcp dataproc",
+    "gcp-dataproc",
+    "hadoop dataproc",
+    "hadoop-dataproc"
+  ],
+  "gcp_composer": [
+    "apache airflow composer",
+    "apache-airflow-composer",
+    "cloud composer",
+    "cloud-composer",
+    "gcp composer",
+    "gcp-composer"
+  ],
+  "gcp_firestore": [
+    "cloud firestore",
+    "cloud-firestore",
+    "firestore",
+    "firestore database",
+    "firestore-database",
+    "gcp firestore",
+    "gcp-firestore"
+  ],
+  "gcp_spanner": [
+    "cloud spanner",
+    "cloud-spanner",
+    "gcp spanner",
+    "gcp-spanner",
+    "spanner",
+    "spanner database",
+    "spanner-database"
+  ],
+  "gcp_secret_manager": [
+    "gcp secret manager",
+    "gcp-secret-manager",
+    "secret manager",
+    "secret manager gcp",
+    "secret-manager",
+    "secret-manager-gcp"
+  ],
+  "docker": [
+    "containers",
+    "docker",
+    "docker compose",
+    "docker desktop",
+    "docker engine",
+    "docker-compose",
+    "docker-desktop",
+    "docker-engine",
+    "dockerized"
+  ],
+  "podman": [
+    "podman"
+  ],
+  "kubernetes": [
+    "k8s",
+    "k8s cluster",
+    "k8s-cluster",
+    "kube",
+    "kubernetes"
+  ],
+  "helm": [
+    "helm",
+    "helm charts",
+    "helm-charts"
+  ],
+  "kustomize": [
+    "kustomization",
+    "kustomize"
+  ],
+  "openshift": [
+    "openshift",
+    "red hat openshift",
+    "red-hat-openshift"
+  ],
+  "docker_swarm": [
+    "docker swarm",
+    "docker-swarm",
+    "swarm",
+    "swarm mode",
+    "swarm-mode"
+  ],
+  "rancher": [
+    "rancher",
+    "rancher kubernetes",
+    "rancher-kubernetes"
+  ],
+  "nomad": [
+    "hashicorp nomad",
+    "hashicorp nomad scheduler",
+    "hashicorp-nomad",
+    "hashicorp-nomad-scheduler",
+    "nomad"
+  ],
+  "consul": [
+    "consul",
+    "hashicorp consul",
+    "hashicorp-consul",
+    "service discovery consul",
+    "service-discovery-consul"
+  ],
+  "istio": [
+    "istio",
+    "istio service mesh",
+    "istio-service-mesh",
+    "service mesh",
+    "service-mesh"
+  ],
+  "linkerd": [
+    "linkerd",
+    "linkerd service mesh",
+    "linkerd-service-mesh"
+  ],
+  "traefik_mesh": [
+    "maesh",
+    "mesh",
+    "traefik mesh",
+    "traefik service mesh",
+    "traefik-mesh",
+    "traefik-service-mesh"
+  ],
+  "terraform": [
+    "hashicorp terraform",
+    "hashicorp-terraform",
+    "iac",
+    "infrastructure as code",
+    "infrastructure-as-code",
+    "terraform",
+    "terraform iac",
+    "terraform-iac"
+  ],
+  "pulumi": [
+    "pulumi",
+    "pulumi iac",
+    "pulumi-iac"
+  ],
+  "ansible": [
+    "ansible",
+    "ansible playbooks",
+    "ansible-playbooks"
+  ],
+  "chef": [
+    "chef",
+    "chef infra",
+    "chef-infra"
+  ],
+  "puppet": [
+    "puppet",
+    "puppet enterprise",
+    "puppet-enterprise"
+  ],
+  "saltstack": [
+    "salt",
+    "salt stack",
+    "salt-stack",
+    "saltstack"
+  ],
+  "packer": [
+    "hashicorp packer",
+    "hashicorp-packer",
+    "packer"
+  ],
+  "vault": [
+    "hashicorp vault",
+    "hashicorp vault secrets",
+    "hashicorp-vault",
+    "hashicorp-vault-secrets",
+    "vault"
+  ],
+  "opa": [
+    "opa",
+    "open policy agent",
+    "open policy agent rego",
+    "open-policy-agent",
+    "open-policy-agent-rego",
+    "rego"
+  ],
+  "jenkins": [
+    "jenkins",
+    "jenkins ci",
+    "jenkins pipelines",
+    "jenkins-ci",
+    "jenkins-pipelines",
+    "jenkinsfile"
+  ],
+  "github_actions": [
+    "actions",
+    "actions runner",
+    "actions-runner",
+    "gh actions",
+    "gh-actions",
+    "gha",
+    "github actions",
+    "github workflows",
+    "github-actions",
+    "github-workflows"
+  ],
+  "gitlab_ci": [
+    "gitlab ci",
+    "gitlab ci/cd",
+    "gitlab pipelines",
+    "gitlab runners",
+    "gitlab-ci",
+    "gitlab-ci/cd",
+    "gitlab-pipelines",
+    "gitlab-runners"
+  ],
+  "circleci": [
+    "circle ci",
+    "circle-ci",
+    "circleci"
+  ],
+  "travis_ci": [
+    "travis",
+    "travis ci",
+    "travis-ci"
+  ],
+  "teamcity": [
+    "jetbrains teamcity",
+    "jetbrains-teamcity",
+    "teamcity"
+  ],
+  "bamboo": [
+    "atlassian bamboo",
+    "atlassian-bamboo",
+    "bamboo"
+  ],
+  "azure_pipelines": [
+    "azure devops pipelines",
+    "azure pipelines",
+    "azure-devops-pipelines",
+    "azure-pipelines"
+  ],
+  "bitbucket_pipelines": [
+    "bitbucket ci",
+    "bitbucket pipelines",
+    "bitbucket-ci",
+    "bitbucket-pipelines"
+  ],
+  "buildkite": [
+    "buildkite"
+  ],
+  "argo_workflows": [
+    "argo",
+    "argo workflow",
+    "argo workflows",
+    "argo-workflow",
+    "argo-workflows"
+  ],
+  "tekton": [
+    "tekton",
+    "tekton pipelines",
+    "tekton-pipelines"
+  ],
+  "prometheus": [
+    "prom",
+    "prometheus",
+    "prometheus monitoring",
+    "prometheus-monitoring",
+    "promql"
+  ],
+  "grafana": [
+    "grafana",
+    "grafana dashboards",
+    "grafana-dashboards"
+  ],
+  "loki": [
+    "grafana loki",
+    "grafana-loki",
+    "loki",
+    "loki logs",
+    "loki-logs"
+  ],
+  "tempo": [
+    "grafana tempo traces",
+    "grafana-tempo-traces",
+    "tempo"
+  ],
+  "alertmanager": [
+    "alert manager",
+    "alert-manager",
+    "alertmanager",
+    "prometheus alertmanager",
+    "prometheus-alertmanager"
+  ],
+  "opentelemetry": [
+    "open telemetry",
+    "open-telemetry",
+    "opentelemetry",
+    "otel",
+    "otel collector",
+    "otel-collector"
+  ],
+  "datadog": [
+    "datadog",
+    "datadog apm",
+    "datadog-apm"
+  ],
+  "new_relic": [
+    "new relic",
+    "new-relic",
+    "newrelic"
+  ],
+  "splunk": [
+    "splunk"
+  ],
+  "sentry": [
+    "sentry"
+  ],
+  "elastic_apm": [
+    "apm",
+    "elastic apm",
+    "elastic application performance monitoring",
+    "elastic-apm",
+    "elastic-application-performance-monitoring"
+  ],
+  "jaeger": [
+    "jaeger",
+    "jaeger tracing",
+    "jaeger-tracing"
+  ],
+  "zipkin": [
+    "openzipkin",
+    "zipkin"
+  ],
+  "kibana": [
+    "elastic kibana",
+    "elastic-kibana",
+    "kibana"
+  ],
+  "logstash": [
+    "elastic logstash",
+    "elastic-logstash",
+    "logstash"
+  ],
+  "filebeat": [
+    "filebeat"
+  ],
+  "fluentd": [
+    "fluent d",
+    "fluent-d",
+    "fluentd"
+  ],
+  "fluent_bit": [
+    "fluent bit",
+    "fluent-bit",
+    "fluentbit"
+  ],
+  "oauth2": [
+    "oauth 2",
+    "oauth 2 0",
+    "oauth 2-0",
+    "oauth 2.0",
+    "oauth 20",
+    "oauth-2",
+    "oauth-2 0",
+    "oauth-2-0",
+    "oauth-2.0",
+    "oauth-20",
+    "oauth2"
+  ],
+  "oidc": [
+    "oidc",
+    "open id connect",
+    "open-id-connect",
+    "openid connect",
+    "openid-connect"
+  ],
+  "saml": [
+    "saml",
+    "saml 2",
+    "saml 2 0",
+    "saml 2-0",
+    "saml 2.0",
+    "saml 20",
+    "saml-2",
+    "saml-2 0",
+    "saml-2-0",
+    "saml-2.0",
+    "saml-20",
+    "saml2"
+  ],
+  "sso": [
+    "single sign on",
+    "single sign-on",
+    "single signon",
+    "single-sign-on",
+    "single-signon",
+    "sso"
+  ],
+  "jwt": [
+    "json web token",
+    "json-web-token",
+    "jwt",
+    "jwt token",
+    "jwt-token",
+    "jwts"
+  ],
+  "iam": [
+    "access management",
+    "access-management",
+    "iam",
+    "identity & access management",
+    "identity and access management",
+    "identity-&-access-management",
+    "identity-and-access-management"
+  ],
+  "keycloak": [
+    "keycloak",
+    "red hat sso",
+    "red-hat-sso"
+  ],
+  "okta": [
+    "okta",
+    "okta auth",
+    "okta-auth"
+  ],
+  "auth0": [
+    "auth 0",
+    "auth-0",
+    "auth0"
+  ],
+  "snyk": [
+    "snyk",
+    "snyk io",
+    "snyk-io",
+    "snyk.io",
+    "snykio"
+  ],
+  "trivy": [
+    "aquasec trivy",
+    "aquasec-trivy",
+    "trivy"
+  ],
+  "aqua": [
+    "aqua",
+    "aqua sec",
+    "aqua security",
+    "aqua-sec",
+    "aqua-security"
+  ],
+  "prisma_cloud": [
+    "palo alto prisma",
+    "palo-alto-prisma",
+    "prisma cloud",
+    "prisma cloud compute",
+    "prisma-cloud",
+    "prisma-cloud-compute",
+    "redlock"
+  ],
+  "twistlock": [
+    "palo alto twistlock",
+    "palo-alto-twistlock",
+    "twistlock"
+  ],
+  "crowdstrike": [
+    "crowdstrike",
+    "crowdstrike falcon",
+    "crowdstrike-falcon",
+    "falcon"
+  ],
+  "siem": [
+    "security information and event management",
+    "security-information-and-event-management",
+    "siem"
+  ],
+  "soc2": [
+    "aicpa soc 2",
+    "aicpa-soc-2",
+    "soc 2",
+    "soc-2",
+    "soc2"
+  ],
+  "iso_27001": [
+    "iso 27001",
+    "iso-27001",
+    "iso/iec 27001",
+    "iso/iec-27001",
+    "iso27001"
+  ],
+  "nist": [
+    "nist",
+    "nist 800-53",
+    "nist csf",
+    "nist cybersecurity framework",
+    "nist-csf",
+    "nist-cybersecurity-framework"
+  ],
+  "nginx": [
+    "nginx",
+    "nginx ingress",
+    "nginx proxy",
+    "nginx-ingress",
+    "nginx-proxy"
+  ],
+  "apache_httpd": [
+    "apache",
+    "apache httpd",
+    "apache web server",
+    "apache-httpd",
+    "apache-web-server",
+    "httpd"
+  ],
+  "caddy": [
+    "caddy"
+  ],
+  "iis": [
+    "iis",
+    "internet information services",
+    "internet-information-services",
+    "microsoft iis",
+    "microsoft-iis"
+  ],
+  "haproxy": [
+    "ha proxy",
+    "ha-proxy",
+    "haproxy"
+  ],
+  "traefik": [
+    "traefik",
+    "traefik proxy",
+    "traefik-proxy"
+  ],
+  "envoy": [
+    "envoy",
+    "envoy proxy",
+    "envoy-proxy",
+    "envoyproxy"
+  ],
+  "maven": [
+    "apache maven",
+    "apache-maven",
+    "maven"
+  ],
+  "gradle": [
+    "gradle",
+    "gradle build",
+    "gradle-build"
+  ],
+  "sbt": [
+    "sbt",
+    "scala build tool",
+    "scala-build-tool"
+  ],
+  "ant": [
+    "ant",
+    "apache ant",
+    "apache-ant"
+  ],
+  "npm": [
+    "node package manager",
+    "node-package-manager",
+    "npm"
+  ],
+  "pnpm": [
+    "pnpm",
+    "pnpmjs"
+  ],
+  "ts_node": [
+    "ts node",
+    "ts-node",
+    "ts-node dev"
+  ],
+  "esbuild": [
+    "esbuild",
+    "esbuild bundler",
+    "esbuild-bundler"
+  ],
+  "poetry": [
+    "poetry",
+    "python poetry",
+    "python-poetry"
+  ],
+  "pipenv": [
+    "pip env",
+    "pip-env",
+    "pipenv"
+  ],
+  "conda": [
+    "anaconda",
+    "conda",
+    "miniconda"
+  ],
+  "pip": [
+    "pip",
+    "pip3"
+  ],
+  "make": [
+    "gnu make",
+    "gnu-make",
+    "make"
+  ],
+  "cmake": [
+    "cmake",
+    "cmake build",
+    "cmake-build"
+  ],
+  "ninja": [
+    "ninja",
+    "ninja build",
+    "ninja-build"
+  ],
+  "bazel": [
+    "bazel",
+    "google bazel",
+    "google-bazel"
+  ],
+  "buck": [
+    "buck",
+    "facebook buck",
+    "facebook-buck"
+  ],
+  "git": [
+    "git",
+    "git scm",
+    "git-scm"
+  ],
+  "github": [
+    "github",
+    "github com",
+    "github-com",
+    "github.com",
+    "githubcom"
+  ],
+  "gitlab": [
+    "gitlab",
+    "gitlab com",
+    "gitlab-com",
+    "gitlab.com",
+    "gitlabcom"
+  ],
+  "bitbucket": [
+    "bitbucket",
+    "bitbucket org",
+    "bitbucket-org",
+    "bitbucket.org",
+    "bitbucketorg"
+  ],
+  "svn": [
+    "apache subversion",
+    "apache-subversion",
+    "subversion",
+    "svn"
+  ],
+  "mercurial": [
+    "hg",
+    "hg mercurial",
+    "hg-mercurial",
+    "mercurial"
+  ],
+  "gerrit": [
+    "gerrit",
+    "gerrit code review",
+    "gerrit-code-review"
+  ],
+  "jira": [
+    "atlassian jira",
+    "atlassian-jira",
+    "jira"
+  ],
+  "trello": [
+    "trello",
+    "trello boards",
+    "trello-boards"
+  ],
+  "asana": [
+    "asana",
+    "asana project management",
+    "asana-project-management"
+  ],
+  "clickup": [
+    "clickup",
+    "clickup tasks",
+    "clickup-tasks"
+  ],
+  "wordpress": [
+    "wordpress",
+    "wordpress cms",
+    "wordpress-cms",
+    "wp"
+  ],
+  "drupal": [
+    "drupal",
+    "drupal cms",
+    "drupal-cms"
+  ],
+  "joomla": [
+    "joomla",
+    "joomla cms",
+    "joomla-cms"
+  ],
+  "shopify": [
+    "shopify",
+    "shopify plus",
+    "shopify-plus"
+  ],
+  "magento": [
+    "adobe commerce",
+    "adobe-commerce",
+    "magento"
+  ],
+  "woocommerce": [
+    "woo commerce",
+    "woo-commerce",
+    "woocommerce"
+  ],
+  "strapi": [
+    "headless cms strapi",
+    "headless-cms-strapi",
+    "strapi"
+  ],
+  "contentful": [
+    "contentful",
+    "contentful cms",
+    "contentful-cms"
+  ],
+  "ghost": [
+    "ghost",
+    "ghost cms",
+    "ghost-cms"
+  ],
+  "power_bi": [
+    "dax",
+    "microsoft power bi",
+    "microsoft-power-bi",
+    "power bi",
+    "power-bi",
+    "powerbi"
+  ],
+  "tableau": [
+    "tableau",
+    "tableau desktop",
+    "tableau-desktop"
+  ],
+  "looker": [
+    "google looker",
+    "google-looker",
+    "looker",
+    "looker bi",
+    "looker-bi"
+  ],
+  "superset": [
+    "apache superset",
+    "apache superset bi",
+    "apache-superset",
+    "apache-superset-bi",
+    "superset"
+  ],
+  "qlik": [
+    "qlik",
+    "qlik sense analytics",
+    "qlik-sense-analytics",
+    "qliksense",
+    "qlikview"
+  ],
+  "junit": [
+    "junit",
+    "junit 4",
+    "junit 5",
+    "junit-4",
+    "junit-5",
+    "junit5"
+  ],
+  "testng": [
+    "testng"
+  ],
+  "pytest": [
+    "py test",
+    "py-test",
+    "py.test",
+    "pytest"
+  ],
+  "nose": [
+    "nose",
+    "nose2"
+  ],
+  "unittest": [
+    "python unittest",
+    "python-unittest",
+    "unittest"
+  ],
+  "jest": [
+    "jest",
+    "jestjs"
+  ],
+  "mocha": [
+    "mocha",
+    "mocha js",
+    "mocha-js",
+    "mocha.js",
+    "mochajs"
+  ],
+  "chai": [
+    "chai"
+  ],
+  "jasmine": [
+    "jasmine",
+    "jasminejs"
+  ],
+  "vitest": [
+    "vitest",
+    "vitest js",
+    "vitest-js",
+    "vitest.js",
+    "vitestjs"
+  ],
+  "rspec": [
+    "rspec",
+    "rspec ruby",
+    "rspec-ruby"
+  ],
+  "go_test": [
+    "go test",
+    "go-test"
+  ],
+  "mstest": [
+    "ms test",
+    "ms-test",
+    "mstest",
+    "visual studio test",
+    "visual-studio-test"
+  ],
+  "nunit": [
+    "nunit",
+    "nunit test",
+    "nunit-test"
+  ],
+  "xunit": [
+    "xunit",
+    "xunit net",
+    "xunit net core",
+    "xunit net-core",
+    "xunit-net",
+    "xunit-net core",
+    "xunit-net-core",
+    "xunit.net",
+    "xunit.net core",
+    "xunit.net-core",
+    "xunitnet",
+    "xunitnet core",
+    "xunitnet-core"
+  ],
+  "selenium": [
+    "selenium",
+    "selenium grid",
+    "selenium webdriver",
+    "selenium-grid",
+    "selenium-webdriver"
+  ],
+  "cypress": [
+    "cypress",
+    "cypress io",
+    "cypress-io",
+    "cypress.io",
+    "cypressio"
+  ],
+  "playwright": [
+    "microsoft playwright",
+    "microsoft-playwright",
+    "playwright"
+  ],
+  "webdriverio": [
+    "wdio",
+    "webdriver io",
+    "webdriver-io",
+    "webdriver.io",
+    "webdriverio"
+  ],
+  "testcafe": [
+    "testcafe"
+  ],
+  "robot_framework": [
+    "robot framework",
+    "robot-framework",
+    "robotframework"
+  ],
+  "postman": [
+    "postman"
+  ],
+  "newman": [
+    "newman"
+  ],
+  "rest_assured": [
+    "rest assured",
+    "rest-assured"
+  ],
+  "karate": [
+    "karate",
+    "karate dsl",
+    "karate-dsl"
+  ],
+  "soapui": [
+    "soapui"
+  ],
+  "k6": [
+    "grafana k6",
+    "grafana-k6",
+    "k6",
+    "k6 load testing",
+    "k6-load-testing"
+  ],
+  "gatling": [
+    "gatling",
+    "gatling io",
+    "gatling-io",
+    "gatling.io",
+    "gatlingio"
+  ],
+  "locust": [
+    "locust",
+    "locust io",
+    "locust-io",
+    "locust.io",
+    "locustio"
+  ],
+  "jmeter": [
+    "apache jmeter load",
+    "apache-jmeter-load",
+    "jmeter"
+  ],
+  "linux": [
+    "gnu/linux",
+    "linux",
+    "linux os",
+    "linux-os"
+  ],
+  "ubuntu": [
+    "ubuntu",
+    "ubuntu linux",
+    "ubuntu lts",
+    "ubuntu-linux",
+    "ubuntu-lts"
+  ],
+  "debian": [
+    "debian",
+    "debian linux",
+    "debian-linux"
+  ],
+  "centos": [
+    "centos",
+    "centos linux",
+    "centos-linux"
+  ],
+  "rhel": [
+    "red hat",
+    "red hat enterprise linux",
+    "red-hat",
+    "red-hat-enterprise-linux",
+    "redhat",
+    "rhel",
+    "rhel linux",
+    "rhel-linux"
+  ],
+  "rocky_linux": [
+    "rocky",
+    "rocky linux",
+    "rocky linux os",
+    "rocky-linux",
+    "rocky-linux-os"
+  ],
+  "almalinux": [
+    "alma linux",
+    "alma linux os",
+    "alma-linux",
+    "alma-linux-os",
+    "almalinux"
+  ],
+  "suse": [
+    "opensuse",
+    "suse",
+    "suse linux",
+    "suse linux enterprise",
+    "suse-linux",
+    "suse-linux-enterprise"
+  ],
+  "alpine_linux": [
+    "alpine",
+    "alpine distro",
+    "alpine linux",
+    "alpine-distro",
+    "alpine-linux"
+  ],
+  "windows": [
+    "ms windows",
+    "ms-windows",
+    "windows",
+    "windows os",
+    "windows server",
+    "windows-os",
+    "windows-server"
+  ],
+  "macos": [
+    "mac os",
+    "mac os x",
+    "mac-os",
+    "mac-os-x",
+    "macos",
+    "macosx",
+    "osx"
+  ],
+  "webassembly": [
+    "wasi",
+    "wasm",
+    "web assembly",
+    "web-assembly",
+    "webassembly"
+  ],
+  "electron": [
+    "electron",
+    "electron app",
+    "electron-app",
+    "electronjs"
+  ],
+  "tauri": [
+    "tauri",
+    "tauri app",
+    "tauri-app"
+  ],
+  "threejs": [
+    "three js",
+    "three-js",
+    "three.js",
+    "threejs"
+  ],
+  "openai": [
+    "openai",
+    "open ai",
+    "open-ai",
+    "openai api",
+    "open ai api",
+    "open-ai-api",
+    "gpt api",
+    "gpt-3",
+    "gpt 3",
+    "gpt-3.5",
+    "gpt 3.5",
+    "gpt-4",
+    "gpt 4",
+    "gpt4",
+    "gpt-4o",
+    "gpt 4o",
+    "gpt-4o-mini",
+    "o1",
+    "o1-mini"
+  ],
+  "azure_openai": [
+    "aoai",
+    "azure openai",
+    "azure openai service",
+    "azure-openai",
+    "azure-openai-service",
+    "azure openai api",
+    "azure cognitive services openai"
+  ],
+  "anthropic": [
+    "anthropic",
+    "anthropic api",
+    "claude",
+    "claude 2",
+    "claude-2",
+    "claude 3",
+    "claude-3",
+    "claude 3.5",
+    "claude-3.5",
+    "claude sonnet",
+    "claude opus",
+    "claude haiku"
+  ],
+  "google_gemini": [
+    "gemini",
+    "google gemini",
+    "gemini api",
+    "google ai studio",
+    "maker suite",
+    "makersuite",
+    "generative ai studio",
+    "google generative ai"
+  ],
+  "cohere": [
+    "cohere",
+    "cohere ai",
+    "cohere api",
+    "command",
+    "command r",
+    "command r+",
+    "cohere rerank",
+    "rerank"
+  ],
+  "mistral_ai": [
+    "mistral",
+    "mistral ai",
+    "mistral api",
+    "mistral small",
+    "mistral large",
+    "mixtral",
+    "mixtral 8x7b",
+    "open mistral"
+  ],
+  "ai21_labs": [
+    "ai21",
+    "ai21 labs",
+    "ai21 api",
+    "j2",
+    "jamba",
+    "jamba instruct"
+  ],
+  "meta_llama": [
+    "meta llama",
+    "llama",
+    "llama2",
+    "llama-2",
+    "llama 2",
+    "llama3",
+    "llama-3",
+    "llama 3",
+    "llama 3.1",
+    "llama-3.1",
+    "code llama",
+    "llama guard",
+    "llama-guard"
+  ],
+  "aws_bedrock": [
+    "amazon bedrock",
+    "aws bedrock",
+    "bedrock",
+    "bedrock api"
+  ],
+  "nvidia_nim": [
+    "nvidia nim",
+    "nim microservices",
+    "nvidia inference microservices",
+    "nim inference"
+  ],
+  "together_ai": [
+    "together",
+    "together ai",
+    "together api"
+  ],
+  "openrouter": [
+    "openrouter",
+    "openrouter ai",
+    "openrouter api"
+  ],
+  "replicate": [
+    "replicate",
+    "replicate api"
+  ],
+  "fireworks_ai": [
+    "fireworks",
+    "fireworks ai",
+    "fireworks api"
+  ],
+  "groq": [
+    "groq",
+    "groq api",
+    "groqcloud",
+    "groq lpu"
+  ],
+  "huggingface_inference_endpoints": [
+    "inference endpoints",
+    "hf inference endpoints",
+    "huggingface inference endpoints",
+    "hf endpoints"
+  ],
+  "ollama": [
+    "ollama",
+    "ollama cli",
+    "ollama run"
+  ],
+  "lm_studio": [
+    "lm studio",
+    "lm-studio",
+    "lmstudio",
+    "lm studio server"
+  ],
+  "vllm": [
+    "vllm",
+    "vllm engine",
+    "vllm serve",
+    "openai-compatible vllm"
+  ],
+  "text_generation_inference": [
+    "tgi",
+    "text-generation-inference",
+    "text generation inference",
+    "huggingface tgi",
+    "hf tgi"
+  ],
+  "sglang": [
+    "sglang",
+    "sgl",
+    "sglang server"
+  ],
+  "tensorrt_llm": [
+    "tensorrt-llm",
+    "nvidia tensorrt llm",
+    "trt-llm"
+  ],
+  "triton_inference_server": [
+    "nvidia triton",
+    "triton inference server",
+    "triton server",
+    "nvidia triton inference"
+  ],
+  "onnx": [
+    "onnx",
+    "open neural network exchange"
+  ],
+  "onnxruntime": [
+    "onnx runtime",
+    "onnx-runtime"
+  ],
+  "openvino": [
+    "openvino",
+    "intel openvino"
+  ],
+  "deepspeed": [
+    "deepspeed",
+    "deepspeed inference",
+    "deepspeed zero",
+    "zero-3"
+  ],
+  "ray_serve": [
+    "ray serve",
+    "ray-serve"
+  ],
+  "kserve": [
+    "kserve",
+    "kfserving",
+    "kf serving"
+  ],
+  "seldon_core": [
+    "seldon",
+    "seldon core",
+    "seldon-core"
+  ],
+  "llama_cpp": [
+    "llama cpp",
+    "llama-cpp",
+    "llama.cpp"
+  ],
+  "fastertransformer": [
+    "fastertransformer",
+    "nvidia fastertransformer",
+    "faster transformer"
+  ],
+  "exllama": [
+    "exllama",
+    "exllama v2",
+    "exllama-v2"
+  ],
+  "gguf": [
+    "gguf",
+    "ggml",
+    "ggmlv3",
+    "gguf quantized"
+  ],
+  "gptq": [
+    "gptq",
+    "gptq-for-llama",
+    "gptq for llama"
+  ],
+  "autoawq": [
+    "awq",
+    "autoawq",
+    "auto awq",
+    "awq quantization"
+  ],
+  "bitsandbytes": [
+    "bitsandbytes",
+    "bits and bytes",
+    "bnb"
+  ],
+  "flash_attention": [
+    "flash attention",
+    "flash-attention",
+    "flashattn",
+    "flash-attn"
+  ],
+  "xformers": [
+    "xformers"
+  ],
+  "peft": [
+    "peft",
+    "parameter efficient fine tuning",
+    "parameter-efficient-fine-tuning"
+  ],
+  "lora": [
+    "lora",
+    "low rank adaptation",
+    "low-rank-adaptation"
+  ],
+  "qlora": [
+    "qlora",
+    "q-lora",
+    "quantized lora"
+  ],
+  "trl": [
+    "trl",
+    "transformers rl",
+    "hf trl"
+  ],
+  "trlx": [
+    "trlx"
+  ],
+  "megatron_lm": [
+    "megatron",
+    "megatron lm",
+    "megatron-lm"
+  ],
+  "accelerate": [
+    "accelerate",
+    "hf accelerate",
+    "huggingface accelerate"
+  ],
+  "langchain": [
+    "langchain",
+    "langchainjs",
+    "langchain python",
+    "lcel",
+    "langchain expression language"
+  ],
+  "llamaindex": [
+    "llamaindex",
+    "gpt index",
+    "gpt-index"
+  ],
+  "haystack": [
+    "haystack",
+    "deepset haystack",
+    "haystack ai"
+  ],
+  "semantic_kernel": [
+    "semantic kernel",
+    "semantic-kernel",
+    "ms semantic kernel"
+  ],
+  "dspy": [
+    "dspy",
+    "dspy ai"
+  ],
+  "guidance": [
+    "guidance",
+    "guidance ai"
+  ],
+  "autogen": [
+    "autogen",
+    "microsoft autogen",
+    "autogen studio"
+  ],
+  "crewai": [
+    "crew ai",
+    "crewai"
+  ],
+  "langgraph": [
+    "langgraph"
+  ],
+  "faiss": [
+    "faiss",
+    "faiss gpu",
+    "facebook ai faiss"
+  ],
+  "annoy": [
+    "annoy",
+    "spotify annoy"
+  ],
+  "hnswlib": [
+    "hnsw",
+    "hnswlib"
+  ],
+  "pinecone": [
+    "pinecone",
+    "pinecone db",
+    "pinecone vectordb"
+  ],
+  "milvus": [
+    "milvus",
+    "zilliz milvus"
+  ],
+  "qdrant": [
+    "qdrant",
+    "qdrant db"
+  ],
+  "weaviate": [
+    "weaviate",
+    "weaviate cloud"
+  ],
+  "chroma": [
+    "chroma",
+    "chromadb",
+    "chroma db"
+  ],
+  "pgvector": [
+    "pgvector",
+    "pgvector extension",
+    "postgres vector",
+    "postgresql vector"
+  ],
+  "vespa": [
+    "vespa",
+    "yahoo vespa"
+  ],
+  "typesense": [
+    "typesense",
+    "typesense vector"
+  ],
+  "marqo": [
+    "marqo",
+    "marqo ai"
+  ],
+  "lancedb": [
+    "lancedb",
+    "lance",
+    "lance db"
+  ],
+  "azure_ai_search": [
+    "azure cognitive search",
+    "azure ai search",
+    "cognitive search",
+    "azure-search"
+  ],
+  "redisearch": [
+    "redisearch",
+    "redis search",
+    "redis vector search",
+    "redis vector"
+  ],
+  "sentence_transformers": [
+    "sentence transformers",
+    "sentence-transformers",
+    "sbert"
+  ],
+  "voyageai": [
+    "voyage ai",
+    "voyageai",
+    "voyage embeddings"
+  ],
+  "jina_embeddings": [
+    "jina",
+    "jina ai",
+    "jina embeddings",
+    "jinaai"
+  ],
+  "tiktoken": [
+    "tiktoken"
+  ],
+  "sentencepiece": [
+    "sentencepiece",
+    "sentence piece",
+    "sentence-piece"
+  ],
+  "huggingface_tokenizers": [
+    "tokenizers",
+    "hf tokenizers",
+    "huggingface tokenizers"
+  ],
+  "unstructured_io": [
+    "unstructured",
+    "unstructured io",
+    "unstructured-io"
+  ],
+  "llama_parse": [
+    "llama parse",
+    "llama-parse",
+    "llamaparse"
+  ],
+  "aws_textract": [
+    "textract",
+    "aws textract",
+    "amazon textract"
+  ],
+  "tesseract": [
+    "tesseract",
+    "tesseract ocr"
+  ],
+  "trafilatura": [
+    "trafilatura"
+  ],
+  "langfuse": [
+    "langfuse"
+  ],
+  "arize_phoenix": [
+    "arize phoenix",
+    "phoenix",
+    "arize-ai phoenix"
+  ],
+  "trulens": [
+    "trulens",
+    "tru lens"
+  ],
+  "promptlayer": [
+    "promptlayer",
+    "prompt layer"
+  ],
+  "promptfoo": [
+    "promptfoo"
+  ],
+  "deepchecks_llm": [
+    "deepchecks",
+    "deepchecks llm",
+    "deepchecks-llm"
+  ],
+  "ragas": [
+    "ragas",
+    "ragas evals",
+    "ragas evaluation"
+  ],
+  "braintrust": [
+    "braintrust",
+    "braintrust data"
+  ],
+  "guardrails_ai": [
+    "guardrails",
+    "guardrails ai"
+  ],
+  "nemo_guardrails": [
+    "nemo guardrails",
+    "nvidia guardrails",
+    "guardrails nemo"
+  ],
+  "lakera_guard": [
+    "lakera",
+    "lakera guard"
+  ],
+  "azure_content_safety": [
+    "azure content safety",
+    "microsoft content safety"
+  ],
+  "openai_moderation": [
+    "openai moderation",
+    "openai safety"
+  ],
+  "litellm": [
+    "litellm",
+    "lite llm",
+    "lite-llm"
+  ]
+}

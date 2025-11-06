@@ -1,0 +1,392 @@
+{
+  "backend_engineer": [
+    "backend engineer",
+    "back-end engineer",
+    "server-side engineer",
+    "api developer",
+    "microservices engineer",
+    "java developer",
+    "spring boot developer",
+    "node developer",
+    "node.js developer",
+    "python developer",
+    ".net developer",
+    "go developer",
+    "golang developer",
+    "ruby developer",
+    "php developer",
+    "scala developer",
+    "rust developer"
+  ],
+  "frontend_engineer": [
+    "frontend engineer",
+    "front-end engineer",
+    "web developer",
+    "javascript developer",
+    "typescript developer",
+    "react developer",
+    "angular developer",
+    "vue developer",
+    "svelte developer",
+    "ui engineer"
+  ],
+  "fullstack_engineer": [
+    "full stack developer",
+    "full-stack developer",
+    "fullstack engineer",
+    "mern developer",
+    "mean developer",
+    "django + react",
+    "rails + react",
+    "java + angular",
+    "node + react",
+    "php + vue"
+  ],
+  "mobile_engineer": [
+    "mobile engineer",
+    "android developer",
+    "kotlin android",
+    "java android",
+    "ios developer",
+    "swift developer",
+    "objective-c developer",
+    "react native developer",
+    "flutter developer",
+    "xamarin developer"
+  ],
+  "qa_engineer": [
+    "qa engineer",
+    "quality assurance",
+    "qa analyst",
+    "software tester",
+    "manual tester",
+    "automation tester",
+    "test automation engineer",
+    "sdet",
+    "test engineer"
+  ],
+  "devops_engineer": [
+    "devops engineer",
+    "platform engineer",
+    "infrastructure engineer",
+    "site reliability engineer",
+    "sre",
+    "cloud engineer",
+    "build engineer",
+    "release engineer",
+    "ci/cd engineer",
+    "systems engineer"
+  ],
+  "data_engineer": [
+    "data engineer",
+    "big data engineer",
+    "etl developer",
+    "spark engineer",
+    "pyspark developer",
+    "data platform engineer",
+    "dwh engineer"
+  ],
+  "data_scientist": [
+    "data scientist",
+    "applied scientist",
+    "ml scientist",
+    "research scientist",
+    "quantitative analyst",
+    "quant"
+  ],
+  "ml_engineer": [
+    "machine learning engineer",
+    "ml engineer",
+    "deep learning engineer",
+    "computer vision engineer",
+    "nlp engineer",
+    "mlops engineer"
+  ],
+  "bi_analyst": [
+    "bi developer",
+    "business intelligence developer",
+    "data analyst",
+    "reporting analyst",
+    "power bi developer",
+    "tableau developer",
+    "looker developer"
+  ],
+  "security_engineer": [
+    "security engineer",
+    "application security",
+    "appsec",
+    "devsecops",
+    "security analyst",
+    "soc analyst",
+    "penetration tester",
+    "pentester"
+  ],
+  "cloud_architect": [
+    "cloud architect",
+    "solutions architect",
+    "solution architect",
+    "enterprise architect",
+    "aws architect",
+    "azure architect",
+    "gcp architect"
+  ],
+  "product_manager": [
+    "product manager",
+    "technical product manager",
+    "product owner",
+    "po"
+  ],
+  "project_manager": [
+    "project manager",
+    "program manager",
+    "delivery manager",
+    "engagement manager",
+    "pm",
+    "pmo"
+  ],
+  "scrum_master": [
+    "scrum master",
+    "agile coach"
+  ],
+  "business_analyst": [
+    "business analyst",
+    "systems analyst",
+    "product analyst",
+    "ba"
+  ],
+  "ui_ux_designer": [
+    "ux designer",
+    "ui designer",
+    "ux/ui designer",
+    "product designer",
+    "interaction designer"
+  ],
+  "support_engineer": [
+    "support engineer",
+    "application support",
+    "production support",
+    "l2 support",
+    "l3 support",
+    "service desk",
+    "incident manager"
+  ],
+  "dba": [
+    "database administrator",
+    "dba",
+    "sql dba",
+    "postgres dba",
+    "mysql dba",
+    "oracle dba"
+  ],
+  "embedded_engineer": [
+    "embedded engineer",
+    "firmware engineer",
+    "iot engineer",
+    "c/c++ embedded",
+    "rtos engineer"
+  ],
+  "erp_consultant": [
+    "erp consultant",
+    "sap consultant",
+    "abap developer",
+    "sap sd",
+    "sap fi",
+    "sap mm",
+    "oracle e-business consultant",
+    "microsoft dynamics consultant",
+    "netsuite consultant"
+  ],
+  "crm_developer": [
+    "salesforce developer",
+    "salesforce admin",
+    "crm developer",
+    "mulesoft developer",
+    "servicenow developer",
+    "ms dynamics developer"
+  ],
+  "game_developer": [
+    "game developer",
+    "unity developer",
+    "unreal developer",
+    "graphics programmer"
+  ],
+  "technical_writer": [
+    "technical writer",
+    "documentation specialist"
+  ],
+  "solutions_engineer": [
+    "solutions engineer",
+    "sales engineer",
+    "pre-sales engineer"
+  ],
+  "ai_developer": [
+    "ai developer",
+    "ai application developer",
+    "ai software engineer",
+    "applied ai engineer",
+    "genai developer",
+    "generative ai developer",
+    "ai product engineer",
+    "llm application engineer",
+    "llm app engineer",
+    "ai agent developer",
+    "agent developer",
+    "chatbot developer",
+    "conversational ai developer",
+    "copilot developer"
+  ],
+  "llm_engineer": [
+    "llm engineer",
+    "llm developer",
+    "language model engineer",
+    "foundation model engineer",
+    "foundation models engineer",
+    "fm engineer",
+    "model engineer (llm)",
+    "instruction tuning engineer",
+    "instruction-tuning engineer",
+    "fine-tuning engineer",
+    "pretraining engineer",
+    "rlhf engineer",
+    "alignment engineer",
+    "prompt tuning engineer",
+    "tokenization engineer"
+  ],
+  "prompt_engineer": [
+    "prompt engineer",
+    "prompt designer",
+    "prompt strategist",
+    "prompt architect",
+    "system prompt engineer",
+    "instruction designer",
+    "prompt scientist"
+  ],
+  "rag_engineer": [
+    "rag engineer",
+    "retrieval-augmented generation engineer",
+    "retrieval engineer",
+    "information retrieval engineer",
+    "ir engineer",
+    "vector search engineer",
+    "semantic search engineer",
+    "vector database engineer",
+    "embedding engineer",
+    "knowledge retrieval engineer",
+    "document ai engineer",
+    "search relevance engineer"
+  ],
+  "ai_inference_engineer": [
+    "inference engineer",
+    "model serving engineer",
+    "model deployment engineer",
+    "llm serving engineer",
+    "performance engineer (ml)",
+    "latency optimization engineer",
+    "systems engineer (ml)",
+    "gpu systems engineer",
+    "cuda engineer",
+    "tensorrt developer",
+    "triton inference server engineer",
+    "graph optimization engineer",
+    "quantization engineer",
+    "distillation engineer",
+    "pruning engineer",
+    "onnx runtime engineer"
+  ],
+  "ai_compiler_engineer": [
+    "ai compiler engineer",
+    "ml compiler engineer",
+    "xla compiler engineer",
+    "tvm engineer",
+    "mlir engineer",
+    "compilers engineer (ml)",
+    "accelerated inference engineer"
+  ],
+  "ml_platform_engineer": [
+    "ml platform engineer",
+    "ml infrastructure engineer",
+    "ai platform engineer",
+    "model platform engineer",
+    "training platform engineer",
+    "feature platform engineer",
+    "feature store engineer",
+    "mlops platform engineer",
+    "ml sre",
+    "ml reliability engineer",
+    "model governance engineer",
+    "experimentation platform engineer"
+  ],
+  "evaluation_engineer": [
+    "ai evaluation engineer",
+    "llm evaluation engineer",
+    "evals engineer",
+    "model evaluation engineer",
+    "safety evaluation engineer",
+    "red-teaming engineer",
+    "red team engineer",
+    "benchmarking engineer",
+    "prompt eval engineer"
+  ],
+  "ai_safety_engineer": [
+    "ai safety engineer",
+    "responsible ai engineer",
+    "trustworthy ai engineer",
+    "adversarial ml engineer",
+    "model risk engineer",
+    "alignment engineer"
+  ],
+  "ai_research_engineer": [
+    "ai research engineer",
+    "research engineer (ml)",
+    "applied research engineer (ml)",
+    "deep learning research engineer",
+    "nlp research engineer",
+    "computer vision research engineer",
+    "multimodal research engineer",
+    "reinforcement learning engineer",
+    "rl engineer",
+    "rlhf research engineer"
+  ],
+  "knowledge_engineer": [
+    "knowledge engineer",
+    "knowledge graph engineer",
+    "kg engineer",
+    "ontology engineer",
+    "ontologist",
+    "semantic engineer",
+    "taxonomy engineer",
+    "schema engineer",
+    "graph ml engineer"
+  ],
+  "multimodal_engineer": [
+    "multimodal engineer",
+    "vision-language engineer",
+    "vlm engineer",
+    "vl engineer",
+    "image+text engineer",
+    "video+text engineer",
+    "speech+text engineer",
+    "perception engineer (ai)"
+  ],
+  "speech_ai_engineer": [
+    "speech ai engineer",
+    "voice ai engineer",
+    "asr engineer",
+    "automatic speech recognition engineer",
+    "speech recognition engineer",
+    "tts engineer",
+    "text-to-speech engineer",
+    "speech synthesis engineer",
+    "audio ml engineer",
+    "wake word engineer"
+  ],
+  "agent_engineer": [
+    "agent engineer",
+    "ai agent engineer",
+    "agents engineer",
+    "agentic systems engineer",
+    "orchestration engineer (ai)",
+    "tooling engineer (ai agents)",
+    "workflow automation engineer (ai)"
+  ]
+}

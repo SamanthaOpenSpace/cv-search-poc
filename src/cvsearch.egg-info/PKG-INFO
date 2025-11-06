@@ -1,0 +1,12 @@
+Metadata-Version: 2.4
+Name: cvsearch
+Version: 0.1.0
+Requires-Dist: click>=8.1.7
+Requires-Dist: python-dotenv>=1.0.1
+Requires-Dist: pydantic>=2.6.0
+Requires-Dist: pydantic-settings>=2.0.0
+Requires-Dist: openai>=1.104.2
+Requires-Dist: faiss-cpu
+Requires-Dist: sentence-transformers
+Requires-Dist: streamlit
+Dynamic: requires-dist
