@@ -136,75 +136,144 @@ class CVIngestionPipeline:
 
         return (candidate_id, vs_text)
 
-    def _build_global_faiss_index(self, embedding_data: List[Tuple[str, str]]) -> None:
+    # --- START NEW METHODS ---
+
+    def load_or_create_index(self) -> faiss.IndexIDMap:
         """
-        Builds and saves a global FAISS index from the provided candidate text blobs.
-        This follows the RAG-challenge's VectorDBIngestor pattern.
+        Safely loads the FAISS index from disk.
+        If it doesn't exist, creates a new IndexIDMap.
         """
-        if not embedding_data:
-            print("No candidate data provided to build FAISS index. Skipping.")
-            return
-
-        print(f"Starting FAISS index build for {len(embedding_data)} candidates...")
-
-        self.db.clear_faiss_id_map()
-
-        candidate_ids = [d[0] for d in embedding_data]
-        texts_to_embed = [d[1] for d in embedding_data]
-
-        mappings: List[Tuple[int, str]] = [(i, cid) for i, cid in enumerate(candidate_ids)]
-
-        all_embeddings = self.local_embedder.get_embeddings(texts_to_embed)
-
-        dims = self.local_embedder.dims
-        index = faiss.IndexFlatIP(dims)
-
-        embeddings_array = np.array(all_embeddings).astype('float32')
-        faiss.normalize_L2(embeddings_array)
-        index.add(embeddings_array)
-
-        print(f"FAISS index created with {index.ntotal} vectors.")
-
         index_path = str(self.settings.faiss_index_path)
+        if os.path.exists(index_path):
+            try:
+                print(f"Loading existing FAISS index from: {index_path}")
+                index = faiss.read_index(index_path)
+                # Ensure it's an IndexIDMap (or can be cast to one)
+                if not isinstance(index, faiss.IndexIDMap):
+                    print(f"Warning: Index is not an IndexIDMap. Re-creating.")
+                    # This is a recovery step if the old index type is found
+                    return self._create_new_index()
+                print(f"FAISS index loaded. Total vectors: {index.ntotal}")
+                return index
+            except Exception as e:
+                print(f"Error loading FAISS index: {e}. Re-creating.")
+                return self._create_new_index()
+        else:
+            return self._create_new_index()
 
-        os.makedirs(os.path.dirname(index_path), exist_ok=True)
-        faiss.write_index(index, index_path)
+    def _create_new_index(self) -> faiss.IndexIDMap:
+        """Helper to create a new, empty IndexIDMap."""
+        print(f"No FAISS index found. Creating new IndexIDMap...")
+        dims = self.local_embedder.dims
+        # Create the core flat index (IP = Inner Product for cosine similarity)
+        index_flat = faiss.IndexFlatIP(dims)
+        # Wrap it with IndexIDMap to allow 64-bit int IDs
+        index = faiss.IndexIDMap(index_flat)
+        print(f"New FAISS index created (dims: {dims}).")
+        return index
 
-        self.db.insert_faiss_id_map_batch(mappings)
-        self.db.commit()
-
-        print(f"FAISS index saved to: {index_path}")
-        print(f"FAISS ID map saved to SQLite table 'faiss_id_map'.")
-
-    def run_ingestion_from_list(self, cvs: List[Dict[str, Any]]) -> int:
+    def upsert_cvs(self, cvs: List[Dict[str, Any]]) -> int:
         """
-        Ingest all CVs from a list, transactionally. Safe to re-run.
+        Ingests a list of CVs into SQLite and "upserts" their
+        vectors into the FAISS index using stable IDs.
+        Manages its own database transaction.
         """
-        embedding_data: List[Tuple[str, str]] = []
+        if not cvs:
+            print("No CVs provided for upsert. Skipping.")
+            return 0
+
+        print(f"Starting upsert process for {len(cvs)} CV(s)...")
+        index = self.load_or_create_index()
+
+        embeddings_to_add = []
+        faiss_ids_to_add = []
+
         try:
             for cv in cvs:
-                data_for_embedding = self._ingest_single_cv(cv)
-                embedding_data.append(data_for_embedding)
+                # 1. Ingest text/metadata into SQLite
+                (candidate_id, vs_text) = self._ingest_single_cv(cv)
 
+                # 2. Get stable, persistent 64-bit ID (from Phase 1)
+                faiss_id = self.db.get_or_create_faiss_id(candidate_id)
+
+                # 3. Get embedding for the candidate's text blob
+                embedding = self.local_embedder.get_embeddings([vs_text])[0]
+
+                embeddings_to_add.append(embedding)
+                faiss_ids_to_add.append(faiss_id)
+
+            print(f"Batching {len(embeddings_to_add)} vectors into FAISS index...")
+
+            # 4. Batch add/overwrite vectors in FAISS
+            embeddings_array = np.array(embeddings_to_add).astype('float32')
+            ids_array = np.array(faiss_ids_to_add).astype('int64')
+
+            faiss.normalize_L2(embeddings_array)
+            # add_with_ids handles both new additions and updates
+            index.add_with_ids(embeddings_array, ids_array)
+
+            # 5. Save the updated index back to disk
+            index_path = str(self.settings.faiss_index_path)
+            os.makedirs(os.path.dirname(index_path), exist_ok=True)
+            faiss.write_index(index, index_path)
+
+            # 6. Commit all DB changes (candidate data, faiss_id_map)
             self.db.commit()
-            print(f"Successfully ingested {len(cvs)} candidates into SQLite.")
+
+            print(f"FAISS index upsert complete. Total vectors: {index.ntotal}")
+            print(f"Index saved to: {index_path}")
+            print(f"Database changes for {len(cvs)} CVs committed.")
+
+            return len(cvs)
 
         except Exception as e:
-            print(f"Error during SQLite ingestion: {e}. Rolling back.")
+            print(f"Error during FAISS/DB upsert: {e}. Rolling back.")
             self.db.conn.rollback()
             raise
 
-        try:
-            self._build_global_faiss_index(embedding_data)
-        except Exception as e:
-            print(f"Error building FAISS index: {e}")
-            raise
+    # --- END NEW METHODS ---
 
-        return len(cvs)
+    # --- DELETED METHODS ---
+    # _build_global_faiss_index(self, ...)
+    # run_ingestion_from_list(self, ...)
+    # --- END DELETED METHODS ---
 
     def run_mock_ingestion(self) -> int:
         """
-        Loads mock CVs and runs the ingestion pipeline.
+        Clears the database and FAISS index, then ingests mock CVs.
+        This is a true "re-ingest" for development.
         """
+        print("--- Running Mock Ingestion (Full Rebuild) ---")
+
+        # 1. Delete old DB and FAISS files
+        db_path = str(self.settings.db_path)
+        index_path = str(self.settings.faiss_index_path)
+
+        if os.path.exists(db_path):
+            print(f"Removing old database: {db_path}")
+            try:
+                self.db.close() # Close connection before deleting
+            except Exception as e:
+                print(f"Could not close DB connection (may be closed): {e}")
+            os.remove(db_path)
+
+        if os.path.exists(index_path):
+            print(f"Removing old FAISS index: {index_path}")
+            os.remove(index_path)
+
+        # 2. Re-initialize DB and schema
+        # We need to create a new connection object for the new file
+        self.db = CVDatabase(self.settings)
+        print("Initializing new database schema...")
+        self.db.initialize_schema() # This method auto-commits
+
+        # 3. Load mock CVs
         cvs = load_mock_cvs(self.settings.data_dir)
-        return self.run_ingestion_from_list(cvs)
+        print(f"Loaded {len(cvs)} mock CVs from JSON.")
+
+        # 4. Call the new upsert method
+        # This method now manages its own transaction
+        count = self.upsert_cvs(cvs)
+
+        print(f"--- Mock Ingestion Complete: {count} CVs ---")
+        return count

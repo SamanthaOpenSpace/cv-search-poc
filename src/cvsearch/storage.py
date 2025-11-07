@@ -472,3 +472,40 @@ class CVDatabase:
         """
         rows = self.conn.execute(sql, faiss_ids).fetchall()
         return {row["faiss_id"]: row["candidate_id"] for row in rows}
+
+    # --- START NEW METHOD ---
+
+    def get_or_create_faiss_id(self, candidate_id: str) -> int:
+        """
+        Atomically retrieves the 64-bit int FAISS ID for a candidate.
+        If the candidate is new, it generates a new ID by incrementing
+        the maximum existing ID.
+
+        This method MUST be called from within an existing transaction
+        to ensure atomicity of the SELECT MAX / INSERT.
+        """
+        # 1. Check if ID already exists
+        cur = self.conn.execute(
+            "SELECT faiss_id FROM faiss_id_map WHERE candidate_id = ?",
+            (candidate_id,)
+        )
+        row = cur.fetchone()
+
+        if row:
+            return int(row["faiss_id"])
+
+        # 2. If not, create a new one
+        # This is safe from race conditions ONLY because the
+        # calling function (pipeline.upsert_cvs) holds a transaction.
+        cur = self.conn.execute("SELECT MAX(faiss_id) FROM faiss_id_map")
+        row = cur.fetchone()
+
+        new_id = (int(row[0]) if row and row[0] is not None else 0) + 1
+
+        self.conn.execute(
+            "INSERT INTO faiss_id_map (faiss_id, candidate_id) VALUES (?, ?)",
+            (new_id, candidate_id)
+        )
+
+        return new_id
+    # --- END NEW METHOD ---
