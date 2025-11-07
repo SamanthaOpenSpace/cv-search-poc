@@ -19,6 +19,9 @@ from src.cvsearch.lexicons import load_role_lexicon, load_tech_synonyms, load_do
 from src.cvsearch.normalize import build_inverse_index, extract_by_lexicon
 from src.cvsearch.storage import CVDatabase
 from src.cvsearch.justification import CandidateJustification
+# --- DELETED IMPORT ---
+# from src.cvsearch.schemas.cv import ExperienceItemStrict, CandidateCVStrict
+
 class SeniorityEnum(str, Enum):
     junior = "junior"
     middle = "middle"
@@ -52,6 +55,7 @@ class OpenAIClient:
             api_key=settings.openai_api_key_str
         )
         self._strict_schema_cache: Dict[str, Any] = {}
+        self._cv_schema_cache: Dict[str, Any] = {}
 
     def get_embeddings(self, texts: List[str]) -> List[List[float]]:
         """
@@ -214,6 +218,171 @@ class OpenAIClient:
         )
         parsed: BaseModel = resp.output_parsed  # type: ignore
         return parsed.model_dump(mode="json")
+
+    # --- START REVISED CV PARSING METHODS ---
+
+    def _build_cv_schema(self, lexicon_dir: Path) -> Tuple[Type[BaseModel], Dict, Dict, Dict]:
+        """
+        Create strict Pydantic models for CV parsing, using lexicons
+        for normalization. Caches for efficiency.
+        """
+        cache_key = str(lexicon_dir)
+        if cache_key in self._cv_schema_cache:
+            return self._cv_schema_cache[cache_key]
+
+        # 1. Load lexicons
+        role_lex = load_role_lexicon(lexicon_dir)
+        tech_syn = load_tech_synonyms(lexicon_dir)
+        domain_lex = load_domain_lexicon(lexicon_dir)
+
+        # 2. Create dynamic Enums
+        RoleEnumDyn = _enum_from_keys("RoleEnumDyn", role_lex.keys())
+        TechEnumDyn = _enum_from_keys("TechEnumDyn", tech_syn.keys())
+        DomainEnumDyn = _enum_from_keys("DomainEnumDyn", domain_lex.keys())
+
+        # 3. Define schemas *inside* the function, using the dynamic Enums
+        #    This mirrors the robust pattern in _build_strict_schema
+
+        class ExperienceItemStrict(BaseModel):
+            """
+            Pydantic model for a single experience entry in a CV,
+            enforcing normalized tags.
+            """
+            title: str = Field(..., description="The job title, e.g., 'Software Engineer'.")
+            company: str = Field(..., description="The company name or project description.")
+            domain_tags: List[DomainEnumDyn] = Field(
+                default_factory=list,
+                description="A list of canonical domain tags, e.g., 'fintech'."
+            )
+            tech_tags: List[TechEnumDyn] = Field(
+                default_factory=list,
+                description="A list of canonical tech tags used in this role."
+            )
+            from_date: Optional[str] = Field(
+                default=None,
+                alias="from",
+                description="Start date (YYYY-MM), if available."
+            )
+            to_date: Optional[str] = Field(
+                default=None,
+                alias="to",
+                description="End date (YYYY-MM or 'Present'), if available."
+            )
+            highlights: List[str] = Field(
+                default_factory=list,
+                description="A list of bullet points for responsibilities or achievements."
+            )
+
+            class Config:
+                populate_by_name = True # Allows using 'from' and 'to' as field names
+
+        class CandidateCVStrict(BaseModel):
+            """
+            Pydantic model for a full candidate CV, enforcing normalized
+            tags from lexicons.
+            """
+            name: str = Field(..., description="Candidate's full name.")
+            location: Optional[str] = Field(
+                default=None,
+                description="Candidate's location, if available."
+            )
+            seniority: Optional[SeniorityEnum] = Field(
+                default=None,
+                description="Inferred seniority level."
+            )
+            role_tags: List[RoleEnumDyn] = Field(
+                default_factory=list,
+                description="A list of canonical role tags, e.g., 'backend_engineer'."
+            )
+            summary: str = Field(
+                ...,
+                description="The 1-3 sentence summary from the top of the CV."
+            )
+            experience: List[ExperienceItemStrict] = Field(
+                default_factory=list,
+                description="A list of the candidate's work experiences or projects."
+            )
+            tech_tags: List[TechEnumDyn] = Field(
+                default_factory=list,
+                description="A top-level list of all canonical tech tags."
+            )
+            unmapped_tags: Optional[str] = Field(
+                default=None,
+                description="A comma-separated list of technologies found in the CV that were not in the official tech enum. This is for admin review."
+            )
+
+        # 4. Cache and return
+        self._cv_schema_cache[cache_key] = (CandidateCVStrict, role_lex, tech_syn, domain_lex)
+        return self._cv_schema_cache[cache_key]
+
+    def _build_cv_system_prompt(self,
+                                text: str,
+                                role_lex: Dict[str, List[str]],
+                                tech_syn: Dict[str, List[str]],
+                                domain_lex: Dict[str, List[str]]) -> str:
+        """
+        Builds the system prompt for CV parsing, including lexicon hints.
+        """
+        cand_roles = self._preselect_candidates(text, role_lex)
+        cand_techs = self._preselect_candidates(text, tech_syn, max_aliases_per_key=3) # Limit noise
+        cand_domains = self._preselect_candidates(text, domain_lex)
+
+        # Reuse the 'block' helper from _build_system_prompt
+        def block(name: str, cand: Dict[str, List[str]], full_keys: Iterable[str]) -> str:
+            if cand:
+                lines = [f"- {canon}: {', '.join(aliases)}" for canon, aliases in cand.items()]
+                return f"{name} (canonical → aliases):\n" + "\n".join(lines)
+            sample = ", ".join(list(sorted(set(full_keys)))[:40])
+            return f"{name} (canonical keys): {sample}"
+
+        instr = [
+            "You are an expert HR and technical recruiting analyst. Your task is to parse the raw text from a CV and convert it into a structured JSON object, adhering strictly to the provided Pydantic schema.",
+            "Rules:",
+            "- Only output values that are in the allowed enums (the schema enforces this).",
+            "- Map any mention or synonym (e.g., 'K8S', 'Kubernetes (AKS)') to the proper canonical key (e.g., 'kubernetes').",
+            "- Infer 'seniority' and 'role_tags' from the candidate's title and summary.",
+            "- Aggregate all technologies from 'Qualifications', 'Skills', and 'Tools' sections into the single top-level 'tech_tags' list.",
+            "- Treat each 'Project' or 'Work Experience' entry as one item in the 'experience' array.",
+            "- **IMPORTANT**: For each 'experience' item, if a company name is not obvious, use the 'Project Description' text as the 'company' field.",
+            "- Map 'Responsibilities' to the 'highlights' array.",
+            "- Map project-specific technologies to the 'experience.tech_tags' list.",
+            "- Infer 'experience.domain_tags' from the project context (e.g., 'digital banking' -> 'fintech').",
+            "- If you find technologies not in the 'TECH' hints, add them to the 'unmapped_tags' field as a comma-separated string.",
+            "",
+            block("ROLES",   cand_roles,   role_lex.keys()),
+            "",
+            block("TECH",    cand_techs,   tech_syn.keys()),
+            "",
+            block("DOMAINS", cand_domains, domain_lex.keys()),
+        ]
+        return "\n".join(instr)
+
+    def get_structured_cv(self, text: str, model: str, settings: Settings) -> Dict[str, Any]:
+        """
+        Single call that parses raw CV text and returns normalized,
+        schema-valid data.
+        """
+        # 1. Get the strict schema and lexicons
+        CandidateCVStrict, role_lex, tech_syn, domain_lex = self._build_cv_schema(settings.lexicon_dir)
+
+        # 2. Build the targeted system prompt
+        sys_prompt = self._build_cv_system_prompt(text, role_lex, tech_syn, domain_lex)
+
+        # 3. Call the LLM
+        resp = self.client.responses.parse(
+            model=model,
+            instructions=sys_prompt,
+            input=text,
+            text_format=CandidateCVStrict,
+            temperature=0,
+            max_output_tokens=2048, # CVs can be long
+        )
+        parsed: BaseModel = resp.output_parsed  # type: ignore
+
+        # 4. Return as a dict
+        return parsed.model_dump(mode="json", by_alias=True) # Use by_alias=True for from/to
+
+    # --- END REVISED CV PARSING METHODS ---
 
     def _build_justification_prompt(self, seat_details: str, cv_context: str) -> Tuple[str, str]:
         """Builds the system and user prompts for justification."""

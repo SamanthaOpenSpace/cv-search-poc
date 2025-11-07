@@ -144,4 +144,4 @@ venv
 /.idea/data_source_mapping.xml
 /src/cvsearch.egg-info/
 /data/cv_search.faiss
-/data/cv_search_docs.json
+/data/gdrive_inbox/

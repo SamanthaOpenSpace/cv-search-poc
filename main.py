@@ -6,9 +6,18 @@ import sqlite3
 import sys
 from pathlib import Path
 
+# --- NEW IMPORTS for Component 3 ---
+import hashlib
+import shutil
+from datetime import datetime
+from src.cvsearch.cv_parser import CVParser
+# --- END NEW IMPORTS ---
+
 sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 from src.cvsearch.search_processor import SearchProcessor, default_run_dir
 from src.cvsearch.planner import Planner
+import subprocess  # Import subprocess for error handling
+from src.cvsearch.gdrive_sync import GDriveSyncer
 
 import click
 from src.cvsearch.storage import CVDatabase
@@ -238,6 +247,172 @@ def project_search_cmd(ctx, text, criteria, topk, run_dir, justify):
 
     finally:
         db.close()
+
+
+@cli.command("sync-gdrive")
+@click.pass_context
+def sync_gdrive_cmd(ctx):
+    """
+    Syncs files from a Google Drive folder to a local directory using rclone.
+
+    This command requires rclone to be installed. You must first run
+    'rclone config' to set up a Google Drive remote.
+
+    Configure settings in your .env file:
+    - GDRIVE_RCLONE_CONFIG_PATH (optional)
+    - GDRIVE_REMOTE_NAME
+    - GDRIVE_SOURCE_DIR
+    - GDRIVE_LOCAL_DEST_DIR
+    """
+    settings: Settings = ctx.obj["settings"]
+    db: CVDatabase = ctx.obj["db"]  # Get db to ensure we close it
+
+    try:
+        syncer = GDriveSyncer(settings)
+
+        click.secho(
+            f"Starting sync from GDrive remote '{settings.gdrive_remote_name}'...",
+            fg="cyan"
+        )
+
+        syncer.sync_files()
+
+        click.secho(
+            f"\n✅ Google Drive sync completed successfully.",
+            fg="green"
+        )
+        click.echo(
+            f"Files are available in: {settings.gdrive_local_dest_dir}"
+        )
+
+    except FileNotFoundError as e:
+        click.secho(f"\n❌ Error: {e}", fg="red")
+        click.secho(
+            "Please ensure 'rclone' is installed and in your system's PATH.",
+            fg="red"
+        )
+        if settings.gdrive_rclone_config_path:
+            click.secho(
+                f"Also check that your config file exists at: "
+                f"{settings.gdrive_rclone_config_path}",
+                fg="red"
+            )
+        ctx.exit(1)
+
+    except subprocess.CalledProcessError as e:
+        click.secho(
+            f"\n❌ rclone command failed with return code {e.returncode}.",
+            fg="red"
+        )
+        click.secho(
+            "Check the rclone output above for error details.",
+            fg="red"
+        )
+        ctx.exit(1)
+
+    except Exception as e:
+        click.secho(f"\n❌ An unexpected error occurred: {e}", fg="red")
+        ctx.exit(1)
+
+    finally:
+        db.close()
+
+# --- START NEW COMMAND ---
+
+@cli.command("ingest-gdrive")
+@click.pass_context
+def ingest_gdrive_cmd(ctx):
+    """
+    Parses .pptx CVs from the GDrive inbox, normalizes them,
+    and ingests them into the database and FAISS index.
+    """
+    # 1. Setup services
+    settings: Settings = ctx.obj["settings"]
+    client: OpenAIClient = ctx.obj["client"]
+    db: CVDatabase = ctx.obj["db"]
+    try:
+        parser = CVParser()
+    except NameError:
+        click.secho("CVParser not found. Make sure 'src/cvsearch/cv_parser.py' exists.", fg="red")
+        db.close()
+        ctx.exit(1)
+
+    # 2. Define paths
+    inbox_dir = settings.gdrive_local_dest_dir
+    archive_dir = inbox_dir / "_archive"
+    archive_dir.mkdir(exist_ok=True)
+
+    # 3. Find files to process
+    pptx_files = list(inbox_dir.glob("*.pptx"))
+    if not pptx_files:
+        click.echo(f"No .pptx files found in {inbox_dir}")
+        db.close()
+        return
+
+    click.echo(f"Found {len(pptx_files)} .pptx CV(s) to process...")
+    cvs_to_ingest = []
+
+    # 4. Loop, Extract, and Map
+    for file_path in pptx_files:
+        try:
+            click.echo(f"  -> Processing {file_path.name}...")
+
+            # Component 1: Extract text from PPTX
+            raw_text = parser.extract_text(file_path)
+
+            # Component 2: Map text to normalized JSON
+            cv_data_dict = client.get_structured_cv(
+                raw_text, settings.openai_model, settings
+            )
+
+            # Generate and add missing metadata
+            file_hash = hashlib.md5(file_path.name.encode()).hexdigest()
+            cv_data_dict["candidate_id"] = f"pptx-{file_hash[:10]}"
+            cv_data_dict["last_updated"] = datetime.now().isoformat().split('T')[0]
+
+            cvs_to_ingest.append(cv_data_dict)
+
+            # Move processed file to archive
+            shutil.move(str(file_path), str(archive_dir / file_path.name))
+            click.secho(f"  -> Successfully parsed and archived {file_path.name}", fg="green")
+
+        except Exception as e:
+            # Catch errors per-file so the batch can continue
+            click.secho(f"  -> FAILED to parse {file_path.name}: {e}", fg="red")
+            # You could move to a '_failed' directory here if desired
+
+    # 5. Ingest processed CVs into DB and FAISS
+    if not cvs_to_ingest:
+        click.echo("No CVs were successfully processed.")
+        db.close()
+        return
+
+    try:
+        click.echo(f"Ingesting {len(cvs_to_ingest)} processed CV(s) into database...")
+        pipeline = CVIngestionPipeline(db, settings)
+
+        # This one call handles DB upsert AND FAISS index rebuild
+        count = pipeline.run_ingestion_from_list(cvs_to_ingest)
+
+        click.secho(
+            f"✅ Successfully ingested {count} new CV(s) and rebuilt FAISS index.",
+            fg="green"
+        )
+
+        unmapped = [
+            cv.get("unmapped_tags") for cv in cvs_to_ingest
+            if cv.get("unmapped_tags")
+        ]
+        if unmapped:
+            click.secho("Review: The following tags were found but are not in your lexicons:", fg="yellow")
+            click.echo(", ".join(set(t for tags in unmapped for t in tags.split(','))))
+
+    except Exception as e:
+        click.secho(f"❌ FAILED during database ingestion: {e}", fg="red")
+    finally:
+        db.close()
+
+# --- END NEW COMMAND ---
 
 if __name__ == "__main__":
     cli()

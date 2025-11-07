@@ -2,7 +2,9 @@ README.md
 setup.py
 src/cvsearch/__init__.py
 src/cvsearch/api_client.py
+src/cvsearch/cv_parser.py
 src/cvsearch/data.py
+src/cvsearch/gdrive_sync.py
 src/cvsearch/ingestion_pipeline.py
 src/cvsearch/justification.py
 src/cvsearch/lexicons.py

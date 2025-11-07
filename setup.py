@@ -12,6 +12,7 @@ setup(
         "openai>=1.104.2",
         "faiss-cpu",
         "sentence-transformers",
-        "streamlit"
+        "streamlit",
+        "python-pptx"
     ],
 )

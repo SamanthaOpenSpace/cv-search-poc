@@ -34,6 +34,24 @@ class Settings(BaseSettings):
     faiss_index_path: Path = Field(default_factory=lambda: REPO_ROOT / "data" / "cv_search.faiss")
     faiss_doc_map_path: Path = Field(default_factory=lambda: REPO_ROOT / "data" / "cv_search_docs.json")
 
+    # --- NEW: Google Drive Sync Settings ---
+    gdrive_rclone_config_path: Optional[Path] = Field(
+        default=None,
+        description="Path to your rclone.conf file. If None, rclone will try its default locations."
+    )
+    gdrive_remote_name: str = Field(
+        default="gdrive",
+        description="The name of your Google Drive remote in rclone (e.g., 'gdrive')."
+    )
+    gdrive_source_dir: str = Field(
+        default="CV_Inbox",
+        description="The specific folder path on Google Drive to sync from."
+    )
+    gdrive_local_dest_dir: Path = Field(
+        default_factory=lambda: REPO_ROOT / "data" / "gdrive_inbox",
+        description="The local directory to download/sync files into."
+    )
+
     @property
     def openai_api_key_str(self) -> str | None:
         """Return the OpenAI API key as a plain string."""
