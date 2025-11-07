@@ -340,9 +340,9 @@ def ingest_gdrive_cmd(ctx):
     # 2. Define paths
     inbox_dir = settings.gdrive_local_dest_dir
     archive_dir = inbox_dir / "_archive"
-    json_output_dir = settings.data_dir / "ingested_cvs_json" # <-- NEW: JSON output path
+    json_output_dir = settings.data_dir / "ingested_cvs_json" # JSON output path
     archive_dir.mkdir(exist_ok=True)
-    json_output_dir.mkdir(exist_ok=True) # <-- NEW: Create JSON dir
+    json_output_dir.mkdir(exist_ok=True) # Create JSON dir
 
     # 3. Find files to process
     pptx_files = list(inbox_dir.glob("*.pptx"))
@@ -355,61 +355,61 @@ def ingest_gdrive_cmd(ctx):
     cvs_to_ingest = []
 
     # 4. Loop, Extract, and Map
-    for file_path in pptx_files:
-        try:
-            click.echo(f"  -> Processing {file_path.name}...")
-
-            # Component 1: Extract text from PPTX
-            raw_text = parser.extract_text(file_path)
-
-            # Component 2: Map text to normalized JSON
-            cv_data_dict = client.get_structured_cv(
-                raw_text, settings.openai_model, settings
-            )
-
-            # Generate and add missing metadata
-            file_hash = hashlib.md5(file_path.name.encode()).hexdigest()
-            cv_data_dict["candidate_id"] = f"pptx-{file_hash[:10]}"
-            cv_data_dict["last_updated"] = datetime.now().isoformat().split('T')[0]
-
-            # --- NEW: Save JSON for debugging ---
-            json_filename = f"{cv_data_dict['candidate_id']}.json"
-            json_save_path = json_output_dir / json_filename
-            with open(json_save_path, 'w', encoding='utf-8') as f:
-                json.dump(cv_data_dict, f, indent=2, ensure_ascii=False)
-            # --- END NEW ---
-
-            cvs_to_ingest.append(cv_data_dict)
-
-            # Move processed file to archive
-            shutil.move(str(file_path), str(archive_dir / file_path.name))
-            click.secho(f"  -> Successfully parsed, saved to JSON, and archived {file_path.name}", fg="green")
-
-        except Exception as e:
-            # Catch errors per-file so the batch can continue
-            click.secho(f"  -> FAILED to parse {file_path.name}: {e}", fg="red")
-            # You could move to a '_failed' directory here if desired
-
-    # 5. Ingest processed CVs into DB and FAISS
-    if not cvs_to_ingest:
-        click.echo("No CVs were successfully processed.")
-        db.close()
-        return
-
+    #    The database connection remains open for the entire loop
+    #    so that get_or_create_faiss_id works in a single transaction.
     try:
+        for file_path in pptx_files:
+            try:
+                click.echo(f"  -> Processing {file_path.name}...")
+
+                # Component 1: Extract text from PPTX
+                raw_text = parser.extract_text(file_path)
+
+                # Component 2: Map text to normalized JSON
+                cv_data_dict = client.get_structured_cv(
+                    raw_text, settings.openai_model, settings
+                )
+
+                # Generate and add missing metadata
+                file_hash = hashlib.md5(file_path.name.encode()).hexdigest()
+                cv_data_dict["candidate_id"] = f"pptx-{file_hash[:10]}"
+                cv_data_dict["last_updated"] = datetime.now().isoformat().split('T')[0]
+
+                # Save JSON for debugging
+                json_filename = f"{cv_data_dict['candidate_id']}.json"
+                json_save_path = json_output_dir / json_filename
+                with open(json_save_path, 'w', encoding='utf-8') as f:
+                    json.dump(cv_data_dict, f, indent=2, ensure_ascii=False)
+
+                cvs_to_ingest.append(cv_data_dict)
+
+                # Move processed file to archive
+                shutil.move(str(file_path), str(archive_dir / file_path.name))
+                click.secho(f"  -> Successfully parsed, saved to JSON, and archived {file_path.name}", fg="green")
+
+            except Exception as e:
+                # Catch errors per-file so the batch can continue
+                click.secho(f"  -> FAILED to parse {file_path.name}: {e}", fg="red")
+                # You could move to a '_failed' directory here if desired
+
+        # 5. Ingest processed CVs into DB and FAISS
+        if not cvs_to_ingest:
+            click.echo("No CVs were successfully processed.")
+            return
+
         click.echo(f"Ingesting {len(cvs_to_ingest)} processed CV(s) into database...")
         pipeline = CVIngestionPipeline(db, settings)
 
-        # This one call handles DB upsert AND FAISS index rebuild
-        count = pipeline.run_ingestion_from_list(cvs_to_ingest)
+        # --- THIS IS THE KEY CHANGE ---
+        # Call the new upsert method instead of run_ingestion_from_list
+        count = pipeline.upsert_cvs(cvs_to_ingest)
+        # --- END KEY CHANGE ---
 
         click.secho(
-            f"✅ Successfully ingested {count} new CV(s) and rebuilt FAISS index.",
+            f"✅ Successfully upserted {count} new CV(s). Index is updated.",
             fg="green"
         )
-        # --- NEW: Report JSON save location ---
         click.echo(f"Debug JSON files saved in: {json_output_dir}")
-        # --- END NEW ---
 
         unmapped = [
             cv.get("unmapped_tags") for cv in cvs_to_ingest
@@ -421,8 +421,10 @@ def ingest_gdrive_cmd(ctx):
             click.echo(all_unmapped)
 
     except Exception as e:
+        # This will catch failures in the pipeline.upsert_cvs() call
         click.secho(f"❌ FAILED during database ingestion: {e}", fg="red")
     finally:
+        # This ensures the DB connection is closed no matter what
         db.close()
 
 # --- END MODIFIED COMMAND ---
