@@ -146,4 +146,3 @@ venv
 /data/ingested_cvs_json/
 /data/gdrive_inbox/
 /data/gdrive_archive/
-cv_search.faiss
