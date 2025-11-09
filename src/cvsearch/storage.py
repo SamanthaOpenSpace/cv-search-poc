@@ -30,7 +30,7 @@ class CVDatabase:
         if self.conn:
             self.conn.close()
 
-    def commit(self):
+    def commit(selfself):
         """Commits the current transaction."""
         self.conn.commit()
 
@@ -87,14 +87,18 @@ class CVDatabase:
         """(Moved from ingest.py)"""
         self.conn.execute(
             """
-            INSERT INTO candidate(candidate_id, name, location, seniority, last_updated, source_filename)
-            VALUES(?,?,?,?,?,?)
+            INSERT INTO candidate(candidate_id, name, location, seniority, last_updated,
+                                  source_filename, source_gdrive_path, source_category, source_folder_role_hint)
+            VALUES(?,?,?,?,?,?,?,?,?)
                 ON CONFLICT(candidate_id) DO UPDATE SET
                 name=excluded.name,
                                                  location=excluded.location,
                                                  seniority=excluded.seniority,
                                                  last_updated=excluded.last_updated,
-                                                 source_filename=excluded.source_filename
+                                                 source_filename=excluded.source_filename,
+                                                 source_gdrive_path=excluded.source_gdrive_path,
+                                                 source_category=excluded.source_category,
+                                                 source_folder_role_hint=excluded.source_folder_role_hint
             """,
             (
                 cv["candidate_id"],
@@ -102,7 +106,10 @@ class CVDatabase:
                 cv.get("location", ""),
                 cv.get("seniority", ""),
                 cv.get("last_updated", ""),
-                cv.get("source_filename", None), # Get the new field (will be None for mocks)
+                cv.get("source_filename", None),
+                cv.get("source_gdrive_path", None),     # <-- NEW
+                cv.get("source_category", None),        # <-- NEW
+                cv.get("source_folder_role_hint", None) # <-- NEW
             ),
         )
     # --- END MODIFIED FUNCTION ---
@@ -477,8 +484,6 @@ class CVDatabase:
         rows = self.conn.execute(sql, faiss_ids).fetchall()
         return {row["faiss_id"]: row["candidate_id"] for row in rows}
 
-    # --- START NEW METHOD ---
-
     def get_or_create_faiss_id(self, candidate_id: str) -> int:
         """
         Atomically retrieves the 64-bit int FAISS ID for a candidate.
@@ -512,4 +517,3 @@ class CVDatabase:
         )
 
         return new_id
-    # --- END NEW METHOD ---

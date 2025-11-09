@@ -5,7 +5,10 @@ CREATE TABLE IF NOT EXISTS candidate (
                                          location     TEXT,
                                          seniority    TEXT,
                                          last_updated TEXT,
-                                         source_filename TEXT -- <-- NEW COLUMN
+                                         source_filename TEXT,
+                                         source_gdrive_path TEXT,      -- <-- NEW
+                                         source_category TEXT,         -- <-- NEW
+                                         source_folder_role_hint TEXT  -- <-- NEW
 );
 
 CREATE TABLE IF NOT EXISTS cv_file (

@@ -5,6 +5,8 @@ import os
 import sqlite3
 import sys
 from pathlib import Path
+import re # <-- NEW IMPORT
+from collections import defaultdict # <-- NEW IMPORT
 
 # --- NEW IMPORTS for Component 3 ---
 import hashlib
@@ -321,21 +323,68 @@ def sync_gdrive_cmd(ctx):
     finally:
         db.close()
 
+# --- START NEW HELPER FUNCTION ---
+def _normalize_folder_name(name: str) -> str:
+    """Converts a folder name to a potential lexicon key."""
+    s = name.lower().strip()
+    s = re.sub(r'\s+', '_', s) # Replace spaces with underscores
+    s = re.sub(r'[^a-z0-9_]', '', s) # Remove non-alphanumeric chars
+    return s
+# --- END NEW HELPER FUNCTION ---
+
+
 # --- START MODIFIED HELPER FUNCTION ---
 def _process_single_cv_file(
         file_path: Path,
         parser: CVParser,
         client: OpenAIClient,
         settings: Settings,
-        json_output_dir: Path
-) -> tuple[Path, dict | None]:
+        json_output_dir: Path,
+        inbox_dir: Path,            # <-- NEW ARG
+        role_keys_lookup: set[str]  # <-- NEW ARG
+) -> tuple[str, dict | tuple[Path, str] | Path]:
     """
     Worker function to process one CV file.
     This is designed to be run in a ThreadPoolExecutor.
-    Returns the original file_path and the processed data, or None on failure.
+
+    Returns a tuple of (status, data):
+    - ("processed", (Path, cv_dict))
+    - ("skipped_role", (Path, missing_role_key))
+    - ("skipped_ambiguous", Path)
+    - ("failed_parsing", Path)
     """
     try:
-        click.echo(f"  -> Processing {file_path.name}...")
+        # --- 1. Find Role Hint and Apply Quality Gate ---
+        relative_path = file_path.relative_to(inbox_dir)
+        source_gdrive_path_str = str(relative_path.as_posix())
+
+        path_parts = relative_path.parent.parts
+
+        if not path_parts:
+            # File is in the root of inbox_dir (e.g., gdrive_inbox/cv.pptx)
+            # This is ambiguous, we don't know the category or role.
+            return "skipped_ambiguous", file_path
+
+        source_category = path_parts[0] # e.g., CANDIDATES or EMPLOYEES
+
+        if len(path_parts) < 2:
+            # File is in a category root (e.g., CANDIDATES/cv.pptx)
+            # Also ambiguous, no role folder.
+            return "skipped_ambiguous", file_path
+
+        # This is the "Role-Gated Ingestion" logic
+        role_folder_name = path_parts[1] # e.g., "Analytics Engineer", "Ruby", "Yaroslav Siomka"
+        role_key = _normalize_folder_name(role_folder_name)
+
+        if role_key not in role_keys_lookup:
+            # THE GATE: Role key not in lexicon, skip this file.
+            return "skipped_role", (file_path, role_key)
+
+        # If we are here, the gate passed.
+        source_folder_role_hint = role_key
+
+        # --- 2. Process the file (slow part) ---
+        click.echo(f"  -> Processing {file_path.name} (Role: {role_key})...")
 
         # Component 1: Extract text from PPTX
         raw_text = parser.extract_text(file_path)
@@ -345,37 +394,37 @@ def _process_single_cv_file(
             raw_text, settings.openai_model, settings
         )
 
-        # --- START METADATA BLOCK ---
-        # Generate and add missing metadata
-        ingestion_time = datetime.now() # Get the ingestion time once
+        # --- 3. Add All Metadata ---
+        ingestion_time = datetime.now()
 
         file_hash = hashlib.md5(file_path.name.encode()).hexdigest()
         cv_data_dict["candidate_id"] = f"pptx-{file_hash[:10]}"
 
-        # Get file stats to read the last modification time
         file_stat = file_path.stat()
         mod_time = datetime.fromtimestamp(file_stat.st_mtime)
-        cv_data_dict["last_updated"] = mod_time.isoformat() # File's last mod time
+        cv_data_dict["last_updated"] = mod_time.isoformat()
 
-        # Add new fields requested by user
-        cv_data_dict["source_filename"] = file_path.name # The original .pptx filename
-        cv_data_dict["ingestion_timestamp"] = ingestion_time.isoformat() # The time it was ingested
-        # --- END METADATA BLOCK ---
+        # Add new fields
+        cv_data_dict["source_filename"] = file_path.name
+        cv_data_dict["ingestion_timestamp"] = ingestion_time.isoformat()
+        cv_data_dict["source_gdrive_path"] = source_gdrive_path_str
+        cv_data_dict["source_category"] = source_category
+        cv_data_dict["source_folder_role_hint"] = source_folder_role_hint
 
-        # Save JSON for debugging
+        # --- 4. Save JSON for debugging ---
         json_filename = f"{cv_data_dict['candidate_id']}.json"
         json_save_path = json_output_dir / json_filename
         with open(json_save_path, 'w', encoding='utf-8') as f:
             json.dump(cv_data_dict, f, indent=2, ensure_ascii=False)
 
         # Return path and success data
-        return (file_path, cv_data_dict)
+        return "processed", (file_path, cv_data_dict)
 
     except Exception as e:
         # Catch errors per-file so the batch can continue
         click.secho(f"  -> FAILED to parse {file_path.name}: {e}", fg="red")
         # Return path and failure data
-        return (file_path, None)
+        return "failed_parsing", file_path
 # --- END MODIFIED HELPER FUNCTION ---
 
 
@@ -397,18 +446,31 @@ def ingest_gdrive_cmd(ctx):
         db.close()
         ctx.exit(1)
 
+    # --- START NEW: Load Role Lexicon for Gating ---
+    try:
+        roles_lex = load_role_lexicon(settings.lexicon_dir)
+        role_keys_lookup = set(roles_lex.keys())
+        click.echo(f"Loaded {len(role_keys_lookup)} role keys from lexicon for gating.")
+    except Exception as e:
+        click.secho(f"❌ FAILED to load role lexicon: {e}", fg="red")
+        click.echo("Cannot proceed without role lexicon for gating.")
+        db.close()
+        ctx.exit(1)
+    # --- END NEW ---
+
     # 2. Define paths
     inbox_dir = settings.gdrive_local_dest_dir
-
-    # Place the archive folder *next to* the inbox, not inside it
     archive_dir = inbox_dir.parent / "gdrive_archive"
-
-    json_output_dir = settings.data_dir / "ingested_cvs_json" # JSON output path
+    json_output_dir = settings.data_dir / "ingested_cvs_json"
     archive_dir.mkdir(exist_ok=True)
-    json_output_dir.mkdir(exist_ok=True) # Create JSON dir
+    json_output_dir.mkdir(exist_ok=True)
 
-    # 3. Find files to process
-    pptx_files = list(inbox_dir.glob("*.pptx"))
+    # 3. Find files to process (RECURSIVE)
+    pptx_files = list(inbox_dir.rglob("*.pptx")) # <-- CHANGED to rglob
+
+    # Filter out any files in an _archive folder (just in case)
+    pptx_files = [p for p in pptx_files if "_archive" not in str(p.parent).lower()]
+
     if not pptx_files:
         click.echo(f"No .pptx files found in {inbox_dir}")
         db.close()
@@ -416,20 +478,18 @@ def ingest_gdrive_cmd(ctx):
 
     click.echo(f"Found {len(pptx_files)} .pptx CV(s) to process...")
 
-    # --- START MODIFIED BLOCK (PARALLEL PROCESSING) ---
-
     # 4. Loop, Extract, and Map (Parallelized)
     cvs_to_ingest = []
-    processed_files = [] # To track what was successfully processed
-    failed_files = []    # To track failures
+    processed_files = []
+    failed_files = []
+    skipped_ambiguous = []
+    # Use defaultdict to aggregate skipped roles
+    skipped_roles = defaultdict(list)
 
-    # Use ThreadPoolExecutor to process files in parallel.
-    # Set max_workers to a reasonable number for parallel API calls.
     max_workers = min(10, len(pptx_files))
 
     try:
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            # Submit all jobs to the executor
             future_to_path = {
                 executor.submit(
                     _process_single_cv_file,
@@ -437,24 +497,46 @@ def ingest_gdrive_cmd(ctx):
                     parser,
                     client,
                     settings,
-                    json_output_dir
+                    json_output_dir,
+                    inbox_dir,          # <-- NEW ARG
+                    role_keys_lookup    # <-- NEW ARG
                 ): file_path for file_path in pptx_files
             }
 
-            # Collect results as they complete
             for future in as_completed(future_to_path):
-                original_path, cv_data = future.result()
+                # Unpack the new return structure
+                status, data = future.result()
 
-                if cv_data:
-                    # Success
+                if status == "processed":
+                    file_path, cv_data = data
                     cvs_to_ingest.append(cv_data)
-                    processed_files.append(original_path)
-                else:
-                    # Failure
-                    failed_files.append(original_path)
+                    processed_files.append(file_path)
+                elif status == "failed_parsing":
+                    failed_files.append(data)
+                elif status == "skipped_ambiguous":
+                    skipped_ambiguous.append(data)
+                elif status == "skipped_role":
+                    file_path, missing_role_key = data
+                    skipped_roles[missing_role_key].append(file_path)
 
-        # 5. Archive successfully processed files
-        click.echo(f"Archiving {len(processed_files)} successfully processed file(s)...")
+        # --- 5. Print Summary Report & Archive ---
+
+        # 5a. Print the Data Quality Gate report (VERY IMPORTANT)
+        if skipped_roles:
+            click.secho("\n--- Data Quality Gate: Skipped CVs ---", fg="yellow")
+            click.secho("The following CVs were skipped because their role folder is not in 'role_lexicon.json'.", fg="yellow")
+            for role_key, files in skipped_roles.items():
+                click.echo(f"  - Missing Role: '{role_key}' (Skipped {len(files)} CV(s))")
+            click.secho("Please add these keys to the lexicon and re-run ingestion.", fg="yellow")
+
+        if skipped_ambiguous:
+            click.secho("\n--- Skipped Ambiguous CVs ---", fg="yellow")
+            click.secho("The following CVs were skipped because they were not in a role folder:", fg="yellow")
+            for file_path in skipped_ambiguous:
+                click.echo(f"  - {file_path.relative_to(inbox_dir)}")
+
+        # 5b. Archive *only* successfully processed files
+        click.echo(f"\nArchiving {len(processed_files)} successfully processed file(s)...")
         for file_path in processed_files:
             timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
             archive_filename = f"{file_path.stem}_archived_at_{timestamp}{file_path.suffix}"
@@ -466,14 +548,14 @@ def ingest_gdrive_cmd(ctx):
                 click.secho(f"  -> FAILED to archive {file_path.name}: {e}", fg="red")
 
         if failed_files:
-            click.secho(f"{len(failed_files)} file(s) failed to process and were not archived. See errors above.", fg="yellow")
+            click.secho(f"{len(failed_files)} file(s) failed to parse and were not archived. See errors above.", fg="yellow")
 
         # 6. Ingest processed CVs into DB and FAISS
         if not cvs_to_ingest:
-            click.echo("No CVs were successfully processed.")
+            click.echo("\nNo new CVs to ingest.")
             return
 
-        click.echo(f"Ingesting {len(cvs_to_ingest)} processed CV(s) into database...")
+        click.echo(f"\nIngesting {len(cvs_to_ingest)} processed CV(s) into database...")
         pipeline = CVIngestionPipeline(db, settings)
 
         count = pipeline.upsert_cvs(cvs_to_ingest)
@@ -494,12 +576,10 @@ def ingest_gdrive_cmd(ctx):
             click.echo(all_unmapped)
 
     except Exception as e:
-        # This will catch failures in the pipeline.upsert_cvs() call
         click.secho(f"❌ FAILED during database ingestion: {e}", fg="red")
     finally:
-        # This ensures the DB connection is closed no matter what
         db.close()
-    # --- END MODIFIED BLOCK ---
+
 
 if __name__ == "__main__":
     cli()
