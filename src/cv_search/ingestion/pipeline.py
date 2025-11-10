@@ -247,11 +247,6 @@ class CVIngestionPipeline:
 
     # --- END NEW METHODS ---
 
-    # --- DELETED METHODS ---
-    # _build_global_faiss_index(self, ...)
-    # run_ingestion_from_list(self, ...)
-    # --- END DELETED METHODS ---
-
     def run_mock_ingestion(self) -> int:
         """
         Clears the database and FAISS index, then ingests mock CVs.
