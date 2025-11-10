@@ -1,7 +1,7 @@
 import streamlit as st
 import sys
 from pathlib import Path
-from typing import List, Dict, Any # <-- Added List, Dict, Any for type hints
+from typing import List # <-- Added List for type hints
 
 APP_ROOT = Path(__file__).resolve().parents[1]
 SRC_PATH = APP_ROOT / "src"
@@ -9,10 +9,10 @@ if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
 try:
-    from src.cvsearch.storage import CVDatabase
-    from src.cvsearch.search_processor import SearchProcessor
-    from src.cvsearch.api_client import OpenAIClient
-    from src.cvsearch.settings import Settings
+    from cv_search.clients.openai_client import OpenAIClient
+    from cv_search.config.settings import Settings
+    from cv_search.db.database import CVDatabase
+    from cv_search.search import SearchProcessor
 except ImportError as e:
     st.error(f"""
     **Failed to import project modules.**

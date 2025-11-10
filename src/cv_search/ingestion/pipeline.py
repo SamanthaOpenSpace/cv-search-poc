@@ -1,22 +1,28 @@
 from __future__ import annotations
 
-from typing import List, Dict, Any, Iterable, Tuple
-import sqlite3, json, os, re, hashlib, shutil
-from datetime import datetime
+import hashlib
+import json
+import os
+import re
+import shutil
+import sqlite3
 from collections import defaultdict
-from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import click # For secho in reporting
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, Iterable, List, Tuple
 
+import click
 import faiss
 import numpy as np
-from src.cvsearch.data import load_mock_cvs
-from src.cvsearch.settings import Settings
-from src.cvsearch.api_client import OpenAIClient
-from src.cvsearch.storage import CVDatabase
-from src.cvsearch.local_embedder import LocalEmbedder
-from src.cvsearch.cv_parser import CVParser
-from src.cvsearch.lexicons import load_role_lexicon
+
+from cv_search.clients.openai_client import OpenAIClient
+from cv_search.config.settings import Settings
+from cv_search.db.database import CVDatabase
+from cv_search.ingestion.cv_parser import CVParser
+from cv_search.ingestion.data_loader import load_mock_cvs
+from cv_search.lexicon.loader import load_role_lexicon
+from cv_search.retrieval.local_embedder import LocalEmbedder
 
 class CVIngestionPipeline:
     """

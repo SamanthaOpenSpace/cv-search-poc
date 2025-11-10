@@ -1,7 +1,7 @@
 import streamlit as st
 import sys
 from pathlib import Path
-from typing import List, Dict, Any # <-- Added List, Dict, Any for type hints
+from typing import Dict, Any # <-- Added Dict, Any for type hints
 
 APP_ROOT = Path(__file__).resolve().parent
 SRC_PATH = APP_ROOT / "src"
@@ -9,16 +9,9 @@ if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
 try:
-    from src.cvsearch.settings import Settings
-    from src.cvsearch.api_client import OpenAIClient
-    from src.cvsearch.storage import CVDatabase
-    from src.cvsearch.search_processor import SearchProcessor
-    from src.cvsearch.planner import Planner
-    from src.cvsearch.lexicons import (
-        load_role_lexicon,
-        load_tech_synonyms,
-        load_domain_lexicon,
-    )
+    from cv_search.app.bootstrap import load_stateless_services as bootstrap_stateless_services
+    from cv_search.db.database import CVDatabase
+    from cv_search.search import SearchProcessor
 except ImportError as e:
     st.error(f"""
     **Failed to import project modules.**
@@ -33,35 +26,16 @@ except ImportError as e:
 
 
 @st.cache_resource
-def load_stateless_services():
+def load_stateless_services() -> Dict[str, Any]:
     """
     Initializes all STATELESS services and lexicons *once* and caches them.
     The DB connection and processor will be created on-demand in each page.
     """
     print("--- [Cache Miss] Loading stateless services... ---")
 
-    settings = Settings()
-
-    client = OpenAIClient(settings)
-    planner = Planner()
-
-    lexicon_dir = settings.lexicon_dir
-
-    # These functions now return List[str]
-    role_lex: List[str] = load_role_lexicon(lexicon_dir)
-    tech_lex: List[str] = load_tech_synonyms(lexicon_dir)
-    domain_lex: List[str] = load_domain_lexicon(lexicon_dir)
-
+    services: Dict[str, Any] = bootstrap_stateless_services()
     print("--- Stateless services loaded and cached. ---")
-
-    return {
-        "settings": settings,
-        "client": client,
-        "planner": planner,
-        "role_lex": role_lex,
-        "tech_lex": tech_lex,
-        "domain_lex": domain_lex
-    }
+    return services
 
 st.set_page_config(
     page_title="CV Search Home",

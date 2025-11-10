@@ -8,12 +8,7 @@ import json
 from dataclasses import asdict, is_dataclass
 from typing import Any, Dict, List, Optional, Tuple
 
-from src.cvsearch.parser import (
-    Criteria,
-    TeamMember,
-    TeamSize,
-    SeniorityEnum,
-)
+from cv_search.core.criteria import Criteria, SeniorityEnum, TeamMember, TeamSize
 
 class Planner:
     """
