@@ -5,24 +5,22 @@ import os
 import sqlite3
 import sys
 from pathlib import Path
-import re # <-- NEW IMPORT
-from collections import defaultdict # <-- NEW IMPORT
+from typing import Dict, Any # <-- NEW/MODIFIED IMPORTS
 
-# --- NEW IMPORTS for Component 3 ---
-import hashlib
-import shutil
-from datetime import datetime
-from src.cvsearch.cv_parser import CVParser
-# --- END NEW IMPORTS ---
-
-# --- NEW IMPORT for Parallelism ---
-from concurrent.futures import ThreadPoolExecutor, as_completed
-# --- END NEW IMPORT ---
+# --- REMOVED IMPORTS ---
+# import re
+# from collections import defaultdict
+# import hashlib
+# import shutil
+# from datetime import datetime
+# from src.cvsearch.cv_parser import CVParser
+# from concurrent.futures import ThreadPoolExecutor, as_completed
+# --- END REMOVED IMPORTS ---
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 from src.cvsearch.search_processor import SearchProcessor, default_run_dir
 from src.cvsearch.planner import Planner
-import subprocess  # Import subprocess for error handling
+import subprocess
 from src.cvsearch.gdrive_sync import GDriveSyncer
 
 import click
@@ -181,7 +179,7 @@ def presale_plan_cmd(ctx, text):
     click.echo(json.dumps(plan, indent=2, ensure_ascii=False))
 
 @cli.command("project-search")
-@click.option("--text", type=str, required=False, help="Free-text brief; used when --criteria is not provided")
+@click.option("--text", type=str, required=False, help="Free-t'ext brief; used when --criteria is not provided")
 @click.option("--criteria", type=click.Path(exists=True, dir_okay=False), required=False, help="Canonical criteria JSON (optional). If provided, seats are taken from here; otherwise derived from --text.")
 @click.option("--topk", type=int, default=3, help="Top-K per seat")
 @click.option("--run-dir", type=click.Path(file_okay=False), default=None, help="Base output folder for artifacts (default: runs/<timestamp>/)")
@@ -323,119 +321,49 @@ def sync_gdrive_cmd(ctx):
     finally:
         db.close()
 
-# --- START NEW HELPER FUNCTION ---
-def _normalize_folder_name(name: str) -> str:
-    """Converts a folder name to a potential lexicon key."""
-    s = name.lower().strip()
-    s = re.sub(r'\s+', '_', s) # Replace spaces with underscores
-    s = re.sub(r'[^a-z0-9_]', '', s) # Remove non-alphanumeric chars
-    return s
-# --- END NEW HELPER FUNCTION ---
 
+def _print_gdrive_report(report: Dict[str, Any]):
+    """Helper to print the ingestion report to the console."""
 
-# --- START MODIFIED HELPER FUNCTION ---
-def _process_single_cv_file(
-        file_path: Path,
-        parser: CVParser,
-        client: OpenAIClient,
-        settings: Settings,
-        json_output_dir: Path,
-        inbox_dir: Path,            # <-- NEW ARG
-        role_keys_lookup: set[str]  # <-- NEW ARG
-) -> tuple[str, dict | tuple[Path, str] | Path]:
-    """
-    Worker function to process one CV file.
-    This is designed to be run in a ThreadPoolExecutor.
+    if report.get("status") == "no_files_found":
+        return # Message already printed by pipeline
 
-    Returns a tuple of (status, data):
-    - ("processed", (Path, cv_dict))
-    - ("skipped_role", (Path, missing_role_key))
-    - ("skipped_ambiguous", Path)
-    - ("failed_parsing", Path)
-    """
-    try:
-        # --- 1. Find Role Hint and Apply Quality Gate ---
-        relative_path = file_path.relative_to(inbox_dir)
-        source_gdrive_path_str = str(relative_path.as_posix())
+    processed_count = report.get("processed_count", 0)
+    skipped_roles = report.get("skipped_roles", {})
+    skipped_ambiguous = report.get("skipped_ambiguous", [])
+    failed_files = report.get("failed_files", [])
+    archival_failures = report.get("archival_failures", [])
+    unmapped_tags = report.get("unmapped_tags", [])
+    json_output_dir = report.get("json_output_dir", "data/ingested_cvs_json")
 
-        path_parts = relative_path.parent.parts
+    if skipped_roles:
+        click.secho("\n--- Data Quality Gate: Skipped CVs ---", fg="yellow")
+        click.secho("The following CVs were skipped because their role folder could not be mapped to a known role in 'role_lexicon.json'.", fg="yellow")
+        for role_key, files in skipped_roles.items():
+            click.echo(f"  - Unmapped Role Folder: '{role_key}' (Skipped {len(files)} CV(s))")
+        click.secho("The LLM determined these are not valid role folders.", fg="yellow")
 
-        if not path_parts:
-            # File is in the root of inbox_dir (e.g., gdrive_inbox/cv.pptx)
-            # This is ambiguous, we don't know the category or role.
-            return "skipped_ambiguous", file_path
+    if skipped_ambiguous:
+        click.secho("\n--- Skipped Ambiguous CVs ---", fg="yellow")
+        click.secho("The following CVs were skipped because they were not in a role folder:", fg="yellow")
+        for file_path in skipped_ambiguous:
+            click.echo(f"  - {file_path}")
 
-        source_category = path_parts[0] # e.g., CANDIDATES or EMPLOYEES
+    if archival_failures:
+        click.secho("\n--- Archival Failures ---", fg="red")
+        for file_name, error_msg in archival_failures:
+            click.echo(f"  - FAILED to archive {file_name}: {error_msg}")
 
-        if len(path_parts) < 2:
-            # File is in a category root (e.g., CANDIDATES/cv.pptx)
-            # Also ambiguous, no role folder.
-            return "skipped_ambiguous", file_path
+    if failed_files:
+        click.secho(f"\n{len(failed_files)} file(s) failed to parse and were not archived. See errors above.", fg="red")
 
-        # This is the "Role-Gated Ingestion" logic
-        role_folder_name = path_parts[1] # e.g., "Analytics Engineer", "Ruby", "Yaroslav Siomka"
-        role_key = _normalize_folder_name(role_folder_name) # e.g., "analytics_engineer", "ruby"
+    if unmapped_tags:
+        click.secho("\n--- Lexicon Review ---", fg="yellow")
+        click.secho("The following tags were found but are not in your lexicons:", fg="yellow")
+        click.echo(", ".join(unmapped_tags))
 
-        # --- LOGIC CHANGE (PHASE 1) ---
-        # The rigid 'if role_key not in role_keys_lookup:' check has been REMOVED.
-        # We now pass *all* role_keys (e.g. "data_analyst", "ruby") to the LLM.
-        # --- END LOGIC CHANGE ---
-
-        # If we are here, the gate passed.
-        source_folder_role_hint = role_key # This will be "data_analyst", "ruby", etc.
-
-        # --- 2. Process the file (slow part) ---
-        click.echo(f"  -> Processing {file_path.name} (Hint: {role_key})...")
-
-        # Component 1: Extract text from PPTX
-        raw_text = parser.extract_text(file_path)
-
-        # Component 2: Map text to normalized JSON (The slow I/O part)
-        # --- LOGIC CHANGE (PHASE 1) ---
-        # We now pass 4 arguments, including the role_key as the hint.
-        cv_data_dict = client.get_structured_cv(
-            raw_text,
-            role_key, # The hint (e.g., "data_analyst", "ruby")
-            settings.openai_model,
-            settings
-        )
-        # --- END LOGIC CHANGE ---
-
-        # --- 3. Add All Metadata ---
-        ingestion_time = datetime.now()
-
-        # Use file name for hash to get a consistent ID
-        file_hash = hashlib.md5(file_path.name.encode()).hexdigest()
-        cv_data_dict["candidate_id"] = f"pptx-{file_hash[:10]}"
-
-        file_stat = file_path.stat()
-        mod_time = datetime.fromtimestamp(file_stat.st_mtime)
-        cv_data_dict["last_updated"] = mod_time.isoformat()
-
-        # Add new fields
-        cv_data_dict["source_filename"] = file_path.name
-        cv_data_dict["ingestion_timestamp"] = ingestion_time.isoformat()
-        cv_data_dict["source_gdrive_path"] = source_gdrive_path_str
-        cv_data_dict["source_category"] = source_category
-
-        # This field is now set by the LLM, so we just use what it returned.
-        # cv_data_dict["source_folder_role_hint"] is already in cv_data_dict
-
-        # --- 4. Save JSON for debugging ---
-        json_filename = f"{cv_data_dict['candidate_id']}.json"
-        json_save_path = json_output_dir / json_filename
-        with open(json_save_path, 'w', encoding='utf-8') as f:
-            json.dump(cv_data_dict, f, indent=2, ensure_ascii=False)
-
-        # Return path and success data
-        return "processed", (file_path, cv_data_dict)
-
-    except Exception as e:
-        # Catch errors per-file so the batch can continue
-        click.secho(f"  -> FAILED to parse {file_path.name}: {e}", fg="red")
-        # Return path and failure data
-        return "failed_parsing", file_path
-# --- END MODIFIED HELPER FUNCTION ---
+    click.echo(f"\nDebug JSON files saved in: {json_output_dir}")
+    click.secho(f"\n✅ GDrive Ingestion Complete: {processed_count} CV(s) upserted.", fg="green")
 
 
 @cli.command("ingest-gdrive")
@@ -445,156 +373,14 @@ def ingest_gdrive_cmd(ctx):
     Parses .pptx CVs from the GDrive inbox, saves to JSON for debug,
     and ingests them into the database and FAISS index.
     """
-    # 1. Setup services
     settings: Settings = ctx.obj["settings"]
     client: OpenAIClient = ctx.obj["client"]
     db: CVDatabase = ctx.obj["db"]
-    try:
-        parser = CVParser()
-    except NameError:
-        click.secho("CVParser not found. Make sure 'src/cvsearch/cv_parser.py' exists.", fg="red")
-        db.close()
-        ctx.exit(1)
-
-    # --- START NEW: Load Role Lexicon for Gating ---
-    try:
-        roles_lex = load_role_lexicon(settings.lexicon_dir)
-        # We still load this, but we no longer use it for the rigid check.
-        # It's good practice to keep it loaded for potential future rules.
-        role_keys_lookup = set(roles_lex.keys())
-        click.echo(f"Loaded {len(role_keys_lookup)} role keys from lexicon for gating.")
-    except Exception as e:
-        click.secho(f"❌ FAILED to load role lexicon: {e}", fg="red")
-        click.echo("Cannot proceed without role lexicon for gating.")
-        db.close()
-        ctx.exit(1)
-    # --- END NEW ---
-
-    # 2. Define paths
-    inbox_dir = settings.gdrive_local_dest_dir
-    archive_dir = inbox_dir.parent / "gdrive_archive"
-    json_output_dir = settings.data_dir / "ingested_cvs_json"
-    archive_dir.mkdir(exist_ok=True)
-    json_output_dir.mkdir(exist_ok=True)
-
-    # 3. Find files to process (RECURSIVE)
-    pptx_files = list(inbox_dir.rglob("*.pptx")) # <-- CHANGED to rglob
-
-    # Filter out any files in an _archive folder (just in case)
-    pptx_files = [p for p in pptx_files if "_archive" not in str(p.parent).lower()]
-
-    if not pptx_files:
-        click.echo(f"No .pptx files found in {inbox_dir}")
-        db.close()
-        return
-
-    click.echo(f"Found {len(pptx_files)} .pptx CV(s) to process...")
-
-    # 4. Loop, Extract, and Map (Parallelized)
-    cvs_to_ingest = []
-    processed_files = []
-    failed_files = []
-    skipped_ambiguous = []
-    # Use defaultdict to aggregate skipped roles
-    skipped_roles = defaultdict(list)
-
-    max_workers = min(10, len(pptx_files))
 
     try:
-        with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            future_to_path = {
-                executor.submit(
-                    _process_single_cv_file,
-                    file_path,
-                    parser,
-                    client,
-                    settings,
-                    json_output_dir,
-                    inbox_dir,          # <-- NEW ARG
-                    role_keys_lookup    # <-- NEW ARG
-                ): file_path for file_path in pptx_files
-            }
-
-            for future in as_completed(future_to_path):
-                # Unpack the new return structure
-                status, data = future.result()
-
-                if status == "processed":
-                    file_path, cv_data = data
-                    # --- NEW GATE: Check if LLM returned null for role hint ---
-                    if cv_data.get("source_folder_role_hint") is None:
-                        # The LLM decided this folder is not a role (e.g., "ruby")
-                        role_key = _normalize_folder_name(file_path.relative_to(inbox_dir).parent.parts[1])
-                        skipped_roles[role_key].append(file_path)
-                    else:
-                        # The LLM successfully mapped it! (e.g., "data_analyst" -> "bi_analyst")
-                        cvs_to_ingest.append(cv_data)
-                        processed_files.append(file_path)
-                elif status == "failed_parsing":
-                    failed_files.append(data)
-                elif status == "skipped_ambiguous":
-                    skipped_ambiguous.append(data)
-                elif status == "skipped_role":
-                    # This case should no longer happen, but we'll leave it
-                    # in case the old logic wasn't fully removed.
-                    file_path, missing_role_key = data
-                    skipped_roles[missing_role_key].append(file_path)
-
-        # --- 5. Print Summary Report & Archive ---
-
-        # 5a. Print the Data Quality Gate report
-        if skipped_roles:
-            click.secho("\n--- Data Quality Gate: Skipped CVs ---", fg="yellow")
-            click.secho("The following CVs were skipped because their role folder could not be mapped to a known role in 'role_lexicon.json'.", fg="yellow")
-            for role_key, files in skipped_roles.items():
-                click.echo(f"  - Unmapped Role Folder: '{role_key}' (Skipped {len(files)} CV(s))")
-            click.secho("The LLM determined these are not valid role folders.", fg="yellow")
-
-        if skipped_ambiguous:
-            click.secho("\n--- Skipped Ambiguous CVs ---", fg="yellow")
-            click.secho("The following CVs were skipped because they were not in a role folder:", fg="yellow")
-            for file_path in skipped_ambiguous:
-                click.echo(f"  - {file_path.relative_to(inbox_dir)}")
-
-        # 5b. Archive *only* successfully processed files
-        click.echo(f"\nArchiving {len(processed_files)} successfully processed file(s)...")
-        for file_path in processed_files:
-            timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-            archive_filename = f"{file_path.stem}_archived_at_{timestamp}{file_path.suffix}"
-            archive_dest_path = archive_dir / archive_filename
-            try:
-                shutil.move(str(file_path), str(archive_dest_path))
-                click.secho(f"  -> Archived {file_path.name} as {archive_filename}", fg="green")
-            except Exception as e:
-                click.secho(f"  -> FAILED to archive {file_path.name}: {e}", fg="red")
-
-        if failed_files:
-            click.secho(f"{len(failed_files)} file(s) failed to parse and were not archived. See errors above.", fg="red")
-
-        # 6. Ingest processed CVs into DB and FAISS
-        if not cvs_to_ingest:
-            click.echo("\nNo new CVs to ingest.")
-            return
-
-        click.echo(f"\nIngesting {len(cvs_to_ingest)} processed CV(s) into database...")
         pipeline = CVIngestionPipeline(db, settings)
-
-        count = pipeline.upsert_cvs(cvs_to_ingest)
-
-        click.secho(
-            f"✅ Successfully upserted {count} new CV(s). Index is updated.",
-            fg="green"
-        )
-        click.echo(f"Debug JSON files saved in: {json_output_dir}")
-
-        unmapped = [
-            cv.get("unmapped_tags") for cv in cvs_to_ingest
-            if cv.get("unmapped_tags")
-        ]
-        if unmapped:
-            click.secho("Review: The following tags were found but are not in your lexicons:", fg="yellow")
-            all_unmapped = ", ".join(set(t.strip() for tags in unmapped for t in tags.split(',')))
-            click.echo(all_unmapped)
+        report = pipeline.run_gdrive_ingestion(client)
+        _print_gdrive_report(report)
 
     except Exception as e:
         click.secho(f"❌ FAILED during database ingestion: {e}", fg="red")
