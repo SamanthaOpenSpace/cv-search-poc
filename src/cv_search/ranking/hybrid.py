@@ -1,9 +1,9 @@
 from __future__ import annotations
 import sqlite3
-from typing import Any, Dict, List, Tuple, Optional
+from typing import Any, Dict, List, Tuple
 
-from src.cvsearch.storage import CVDatabase
-from src.cvsearch.settings import Settings
+from cv_search.config.settings import Settings
+from cv_search.db.database import CVDatabase
 
 class HybridRanker:
     """

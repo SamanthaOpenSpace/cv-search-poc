@@ -1,11 +1,11 @@
-# src/cvsearch/gdrive_sync.py
+# cv_search/ingestion/gdrive_sync.py
 from __future__ import annotations
 import os
 import shutil
 import subprocess
 import click
 from typing import List
-from src.cvsearch.settings import Settings
+from cv_search.config.settings import Settings
 
 class GDriveSyncer:
     """

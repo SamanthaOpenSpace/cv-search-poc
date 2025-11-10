@@ -13,27 +13,28 @@ from typing import Dict, Any # <-- NEW/MODIFIED IMPORTS
 # import hashlib
 # import shutil
 # from datetime import datetime
-# from src.cvsearch.cv_parser import CVParser
+# from cv_search.ingestion.cv_parser import CVParser
 # from concurrent.futures import ThreadPoolExecutor, as_completed
 # --- END REMOVED IMPORTS ---
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
-from src.cvsearch.search_processor import SearchProcessor, default_run_dir
-from src.cvsearch.planner import Planner
+from cv_search.search import SearchProcessor, default_run_dir
+from cv_search.planner.service import Planner
 import subprocess
-from src.cvsearch.gdrive_sync import GDriveSyncer
+from cv_search.ingestion.gdrive_sync import GDriveSyncer
 
 import click
-from src.cvsearch.storage import CVDatabase
-from src.cvsearch.lexicons import (
+from cv_search.db.database import CVDatabase
+from cv_search.lexicon.loader import (
     load_role_lexicon,
     load_tech_synonyms,
     load_domain_lexicon,
 )
-from src.cvsearch.ingestion_pipeline import CVIngestionPipeline
-from src.cvsearch.parser import parse_request, Criteria, TeamSize, TeamMember
-from src.cvsearch.settings import Settings
-from src.cvsearch.api_client import OpenAIClient
+from cv_search.ingestion.pipeline import CVIngestionPipeline
+from cv_search.core.criteria import Criteria, TeamMember, TeamSize
+from cv_search.core.parser import parse_request
+from cv_search.config.settings import Settings
+from cv_search.clients.openai_client import OpenAIClient
 
 
 @click.group()
