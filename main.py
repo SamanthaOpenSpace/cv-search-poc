@@ -5,6 +5,7 @@ import os
 import sqlite3
 import sys
 from pathlib import Path
+from dotenv import load_dotenv
 from typing import Dict, Any # <-- NEW/MODIFIED IMPORTS
 
 # --- REMOVED IMPORTS ---
@@ -16,6 +17,7 @@ from typing import Dict, Any # <-- NEW/MODIFIED IMPORTS
 # from cv_search.ingestion.cv_parser import CVParser
 # from concurrent.futures import ThreadPoolExecutor, as_completed
 # --- END REMOVED IMPORTS ---
+load_dotenv(dotenv_path=Path(__file__).parent / ".env", override=False)
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 from cv_search.search import SearchProcessor, default_run_dir

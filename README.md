@@ -1,184 +1,191 @@
-Here is the updated `README.md` file, edited to include clear, professional instructions for setting up `rclone` locally.
-
------
-
 # cv-search
 
-A RAG-based system for parsing, indexing, and searching candidate CVs.
+Local-first candidate search & planning with **SQLite + FAISS** and a Streamlit UI.  
+Built as a `src/`-layout Python package and managed with **uv**.
 
-## 🚀 Local Setup
+- **UI**: `app.py` + `pages/`
+- **CLI**: `main.py` (Click)
+- **Vectors**: FAISS file at `data/cv_search.faiss`
+- **Embeddings**: sentence-transformers (`all-MiniLM-L6-v2`)
+- **Config**: `.env` → `Settings`
 
-1.  **Create Virtual Environment**
+---
 
-    ```sh
-    # Using python 3.11+
-    py -3.11 -m venv .venv
+## 🔧 Prerequisites
 
-    # Activate (Windows PowerShell)
-    .\.venv\Scripts\Activate.ps1
+- **Python**: 3.11+
+- **uv**: environment & package manager
+- (Optional) **rclone**: only required for the Google Drive ingestion flow
 
-    # Activate (macOS/Linux)
-    # source .venv/bin/activate
-    ```
+> Copy `.env.example` → `.env` and fill the keys you actually use.
 
-2.  **Install Dependencies**
+---
 
-    ```sh
-    pip install -e .
-    ```
+## ⚙️ Setup (uv-first)
 
-3.  **Configure Environment**
-    Create a `.env` file in the root directory and add your OpenAI API key. If using Azure, add your Azure-specific keys (see `src/cvsearch/settings.py` for all options).
+```bash
+# Create a local virtual environment for Python 3.11
+uv venv -p 3.11
 
-    ```ini
-    # For standard OpenAI
-    OPENAI_API_KEY=sk-proj-*****************
-
-    # Or for Azure
-    # USE_AZURE_OPENAI=True
-    # OPENAI_API_KEY=your-azure-api-key
-    # AZURE_ENDPOINT=https://your-resource.openai.azure.com/
-    # AZURE_API_VERSION=2024-02-01
-    # OPENAI_MODEL=your-chat-deployment-name
-    # OPENAI_EMBED_MODEL=your-embedding-deployment-name
-    ```
-
-4.  **Initialize Database**
-    This creates the `cvsearch.db` SQLite file and runs the schema.
-
-    ```sh
-    python .\main.py init-db
-    ```
-
-5.  **Ingest Mock Data**
-    This command clears the database, loads all CVs from `data/mock_cvs.json`, and builds the local FAISS vector index (`data/cv_search.faiss`).
-
-    ```sh
-    python .\main.py ingest-mock
-    ```
-
------
-
-## ☁️ Optional: Setting Up Google Drive Sync
-
-This project uses `rclone` to sync new CVs (as `.pptx` files) from a Google Drive folder. The `ingest-gdrive` command will then parse these files, convert them to JSON, and ingest them into the database.
-
-### 1\. Install `rclone`
-
-`rclone` is a command-line tool for managing files on cloud storage.
-
-* **Official Docs:** Download the binary from the [rclone downloads page](https://rclone.org/downloads/).
-* **macOS (Homebrew):** `brew install rclone`
-* **Windows (Scoop/Chocolatey):** `scoop install rclone` or `choco install rclone`
-
-After installation, ensure the `rclone` executable is available in your system's `PATH`. You can verify this by running:
-
-```sh
-rclone --version
+# Install project deps as defined in pyproject.toml
+uv sync
 ```
 
-### 2\. Configure `rclone` for Google Drive
+> `uv sync` installs the package in editable mode (src layout) because the project sets `[tool.uv].package = true`.
 
-You need to create a "remote" configuration for Google Drive.
+---
 
-1.  Run the interactive configuration tool:
-    ```sh
-    rclone config
-    ```
-2.  Follow the prompts:
-    * `n` (New remote)
-    * **`name>`**: Enter a name for your remote. We recommend `gdrive`. This name **must** match the `GDRIVE_REMOTE_NAME` in your `.env` file.
-    * **`Storage>`**: Find "Google Drive" in the list and enter its corresponding number (e.g., `18`).
-    * **`client_id>`**: Press Enter to leave blank.
-    * **`client_secret>`**: Press Enter to leave blank.
-    * **`scope>`**: Press Enter or type `1` for full access.
-    * **`root_folder_id>`**: Press Enter to leave blank (searches all of "My Drive").
-    * **`service_account_file>`**: Press Enter to leave blank.
-    * **`Edit advanced config?`**: `n` (No)
-    * **`Use auto config?`**: `y` (Yes). This will open a browser window.
-    * In the browser, log in to the Google account that has access to the CV folder and grant `rclone` permissions.
-    * **`Configure this as a team drive?`**: `n` (No), unless your CV folder is in a Shared Drive.
-    * **`y/e/d>`**: `y` (Yes, this is OK) to save the configuration.
-    * **`q`** (Quit config) to exit.
+## 🔐 Configure environment
 
-### 3\. Update `.env` File
+Create `.env` in the repo root (start from `.env.example`) and set one provider:
 
-Add the following variables to your `.env` file:
-
+**Standard OpenAI**
 ```ini
-# The 'name' you gave your remote in `rclone config`
+OPENAI_API_KEY=sk-...
+# Optional overrides
+# OPENAI_MODEL=gpt-4.1-mini
+# OPENAI_EMBED_MODEL=text-embedding-3-large
+```
+
+**Azure OpenAI**
+```ini
+USE_AZURE_OPENAI=True
+OPENAI_API_KEY=...
+AZURE_ENDPOINT=https://<your-resource>.openai.azure.com/
+AZURE_API_VERSION=2024-02-01
+# In Azure, these are deployment names:
+OPENAI_MODEL=<chat-deployment>
+OPENAI_EMBED_MODEL=<embed-deployment>
+```
+
+**Search defaults (optional)**
+```ini
+# "hybrid" | "lexical" | "semantic"
+SEARCH_MODE=hybrid
+```
+
+**Google Drive sync (optional)**
+```ini
 GDRIVE_REMOTE_NAME=gdrive
-
-# The folder path *on your Google Drive* to sync from
 GDRIVE_SOURCE_DIR=CV_Inbox
-
-# The local folder where CVs will be downloaded
-# Default is "data/gdrive_inbox"
-GDRIVE_LOCAL_DEST_DIR=data/gdrive_inbox
-
-# (Optional) Path to your rclone.conf file.
-# Leave this commented out or blank if rclone is using its default location.
-# GDRIVE_RCLONE_CONFIG_PATH=
+# GDRIVE_LOCAL_DEST_DIR=data/gdrive_inbox
+# GDRIVE_RCLONE_CONFIG_PATH=<custom rclone.conf path if not default>
 ```
 
-### 4\. Run the Sync and Ingest Commands
+---
 
-Now you can run the CLI commands.
+## ✅ Bootstrapping checks
 
-1.  **Sync Files:** Pulls `.pptx` files from Google Drive to your local `GDRIVE_LOCAL_DEST_DIR`.
+```bash
+# Show detected env & settings (API key masked)
+uv run python main.py env-info
 
-    ```sh
-    python .\main.py sync-gdrive
-    ```
+# Initialize (or re-initialize) the database schema
+uv run python main.py init-db
 
-2.  **Ingest Files:** Parses the downloaded `.pptx` files, converts them to structured JSON (saved in `data/ingested_cvs_json/`), and upserts them into the database and FAISS index.
-
-    ```sh
-    python .\main.py ingest-gdrive
-    ```
-
------
-
-## 🛠️ Usage
-
-### Run Streamlit UI
-
-The easiest way to use the app is via the Streamlit web interface.
-
-```sh
-streamlit run app.py
+# Verify DB tables and FTS support
+uv run python main.py check-db
 ```
 
-### Run CLI Commands
+---
 
-You can also test individual components from the command line.
+## 📥 Ingestion flows
 
-**Parse a free-text request into structured JSON:**
+> **Read this first:** The current codebase shows a few WIP gaps in ingestion (see **Known gaps** below).  
+> You can still use the UI/CLI for parsing/planning/search once your DB & FAISS are seeded.
 
-```sh
-python .\main.py parse-request
+### Option A — Mock data (JSON)
+
+```bash
+uv run python main.py ingest-mock
 ```
 
-**Run a single-seat search (using `criteria.json`):**
+- Intention: rebuild `cvsearch.db` and the FAISS index from `data/test/mock_cvs.json`.
+- **Current status:** this command references a non-existent `Settings.test_data_dir` and will error out until the attribute is added or the code is patched. See **Known gaps**.
 
-```sh
-python .\main.py search-seat --criteria ./criteria.json --topk 2
+### Option B — Google Drive inbox (via rclone)
+
+1) Install and configure **rclone** (`rclone config`) with a remote matching `GDRIVE_REMOTE_NAME` in `.env`.
+2) Pull `.pptx` CVs locally, then parse & ingest:
+
+```bash
+uv run python main.py sync-gdrive     # downloads from Drive → local inbox
+uv run python main.py ingest-gdrive   # parses PPTX → JSON, upserts DB & FAISS
 ```
 
-**Plan a presale team from a brief:**
+- **Current status:** ingestion calls `get_or_create_faiss_id(...)` which is not present in `CVDatabase`; implement this helper before this flow can succeed. See **Known gaps**.
 
-```sh
-python main.py presale-plan --text "Mobile + web app with Flutter/React; AI chatbot for goal setting; partner marks failures; donation on failure."
+---
+
+## 🔎 Search & planning (CLI)
+
+> **Tip:** Run search after you have data + FAISS in place. Semantic search warns if the index is missing.
+
+### Parse a free-text brief → normalized criteria JSON
+```bash
+uv run python main.py parse-request   --text "Greenfield healthtech app; 2 senior .NET + 1 React; Kafka, Postgres; Playwright"
 ```
 
-**Run a full project search (deriving seats from text):**
-
-```sh
-python main.py project-search --text "Mobile+web app in Flutter/React; AI chatbot; partner marks failures; donation on failure." --topk 3
+### Single-seat search (from criteria JSON)
+```bash
+uv run python main.py search-seat   --criteria ./data/test/criteria.json   --topk 3   --mode hybrid   --justify
 ```
 
-**Run a full project search (using explicit seats from JSON):**
+### Project search (multi-seat)
 
-```sh
-python main.py project-search --criteria ./criteria.json --topk 3
+From text (derives seats deterministically):
+```bash
+uv run python main.py project-search   --text "Mobile + web app; React/Next.js + .NET; Kafka; healthtech"   --topk 3   --justify
 ```
+
+From explicit criteria:
+```bash
+uv run python main.py project-search   --criteria ./data/test/criteria.json   --topk 3   --justify
+```
+
+### Presale planning (stateless roles from a brief)
+```bash
+uv run python main.py presale-plan   --text "Mobile + web app; Flutter or React Native; LLM chatbot; analytics dashboards"
+```
+
+---
+
+## 🖥️ Streamlit UI
+
+```bash
+uv run streamlit run app.py
+```
+
+Pages:
+- **Project Search** – derive seats from a brief or upload a criteria JSON; run per‑seat search (optionally with LLM justifications).
+- **Single Seat Search** – build a one-seat query from widgets; run lexical/semantic/hybrid ranking.
+- **Admin & System** – status metrics, mock re‑ingest button.
+
+> **Note:** The “Upload New CVs” button in **Admin & Ingest** references a method removed from the ingestion pipeline. Use the CLI once ingestion helpers are restored. See **Known gaps**.
+
+---
+
+## 🧠 Retrieval modes
+
+- **Lexical**: weighted SQL over normalized tags (role/tech/domain/seniority) in SQLite.
+- **Semantic**: FAISS search over a synthesized per-candidate document; requires the local index.
+- **Hybrid**: late fusion (`w_lex`, `w_sem`) with per-seat diagnostics and artifacts (optionally saved under `runs/<timestamp>/`).
+
+On first run, `sentence-transformers` downloads the model (`all-MiniLM-L6-v2`). Subsequent runs use cache.
+
+---
+
+## 🛠️ Known gaps & temporary guidance
+
+These are present in the current repo snapshot and affect ingestion/justification paths:
+
+1. **`ingest-mock`** references `Settings.test_data_dir`, which does not exist; add this attribute (e.g., defaulting to `REPO_ROOT / "data" / "test"`) or adapt the call site to use `settings.data_dir / "test"`.
+2. **FAISS ID mapping**: ingestion calls `CVDatabase.get_or_create_faiss_id(...)`, but this helper is not implemented; add it to persist a stable `faiss_id` per `candidate_id` in `faiss_id_map`.
+3. **UI upload ingestion**: Streamlit’s Admin page calls `pipeline.run_ingestion_from_list(...)`, which was explicitly deleted during refactor; reintroduce a compatible method or wire the UI to `upsert_cvs(...)`.
+4. **LLM justification context**: both the UI and `JustificationService` expect `CVDatabase.get_full_candidate_context(...)` which doesn’t exist; implement a query that returns `summary_text`, `experience_text`, and `tags_text` from `candidate_doc`.
+
+Until those are addressed:
+- Prefer running **search flows** against a DB you’ve already seeded (once the above helpers are added).
+- If you need semantic results, ensure the FAISS index exists; otherwise, run in **lexical** mode to test ranking behavior.
+
+---

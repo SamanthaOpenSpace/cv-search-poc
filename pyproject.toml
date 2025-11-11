@@ -21,8 +21,17 @@ dependencies = [
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.hatch.build]
-packages = [{include = "cv_search", from = "src"}]
+[tool.hatch.build.targets.wheel]
+packages = ["src/cv_search"]
 
-[tool.uv]
-package = true
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/cv_search",
+    "README.md",
+    "pyproject.toml",
+    "app.py",
+    "main.py",
+    "pages/**",
+    "data/**",
+    ".env.example",
+]
