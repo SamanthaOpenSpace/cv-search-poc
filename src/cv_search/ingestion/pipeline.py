@@ -4,7 +4,6 @@ import hashlib
 import json
 import os
 import re
-import shutil
 import sqlite3
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -292,13 +291,10 @@ class CVIngestionPipeline:
             raise
 
         inbox_dir = self.settings.gdrive_local_dest_dir
-        archive_dir = inbox_dir.parent / "gdrive_archive"
         json_output_dir = self.settings.data_dir / "ingested_cvs_json"
-        archive_dir.mkdir(exist_ok=True)
         json_output_dir.mkdir(exist_ok=True)
 
         pptx_files = list(inbox_dir.rglob("*.pptx"))
-        pptx_files = [p for p in pptx_files if "_archive" not in str(p.parent).lower()]
 
         if target_filename:
             pptx_files = [p for p in pptx_files if p.name == target_filename]
@@ -323,8 +319,6 @@ class CVIngestionPipeline:
                 "processed_count": 0,
                 "status": "no_changes",
                 "skipped_unchanged": skipped_unchanged,
-                "archived_files": [],
-                "archival_failures": [],
                 "skipped_roles": {},
                 "skipped_ambiguous": [],
                 "failed_files": [],
@@ -366,18 +360,6 @@ class CVIngestionPipeline:
                 elif status == "skipped_ambiguous":
                     skipped_ambiguous.append(str(data.relative_to(inbox_dir)))
 
-        archived_files = []
-        archival_failures = []
-        for file_path in processed_files:
-            timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-            archive_filename = f"{file_path.stem}_archived_at_{timestamp}{file_path.suffix}"
-            archive_dest_path = archive_dir / archive_filename
-            try:
-                shutil.move(str(file_path), str(archive_dest_path))
-                archived_files.append(archive_filename)
-            except Exception as e:
-                archival_failures.append((file_path.name, str(e)))
-
         ingested_count = 0
         if cvs_to_ingest:
             click.echo(f"\nIngesting {len(cvs_to_ingest)} processed CV(s) into database...")
@@ -398,8 +380,6 @@ class CVIngestionPipeline:
 
         return {
             "processed_count": ingested_count,
-            "archived_files": archived_files,
-            "archival_failures": archival_failures,
             "skipped_roles": {},
             "skipped_ambiguous": skipped_ambiguous,
             "failed_files": failed_files,

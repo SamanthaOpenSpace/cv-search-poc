@@ -353,7 +353,6 @@ def _print_gdrive_report(report: Dict[str, Any]):
     skipped_roles = report.get("skipped_roles", {})
     skipped_ambiguous = report.get("skipped_ambiguous", [])
     failed_files = report.get("failed_files", [])
-    archival_failures = report.get("archival_failures", [])
     unmapped_tags = report.get("unmapped_tags", [])
     json_output_dir = report.get("json_output_dir", "data/ingested_cvs_json")
     skipped_unchanged = report.get("skipped_unchanged", [])
@@ -376,13 +375,8 @@ def _print_gdrive_report(report: Dict[str, Any]):
         for rel_path in skipped_unchanged:
             click.echo(f"  - {rel_path}")
 
-    if archival_failures:
-        click.secho("\n--- Archival Failures ---", fg="red")
-        for file_name, error_msg in archival_failures:
-            click.echo(f"  - FAILED to archive {file_name}: {error_msg}")
-
     if failed_files:
-        click.secho(f"\n{len(failed_files)} file(s) failed to parse and were not archived. See errors above.", fg="red")
+        click.secho(f"\n{len(failed_files)} file(s) failed to parse. See errors above.", fg="red")
 
     if unmapped_tags:
         click.secho("\n--- Lexicon Review ---", fg="yellow")
