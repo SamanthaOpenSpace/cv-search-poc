@@ -321,32 +321,53 @@ class CVDatabase:
     ) -> Tuple[List[Any], str, List[Dict[str, Any]]]:
         if not gated_ids:
             return [], "", []
-        params: List[Any] = list(gated_ids)
-        must_params = list(must_have)
-        nice_params = list(nice_to_have)
-        domain_params = list(domains)
+
+        def ph(n: int) -> str:
+            return ",".join(["?"] * n)
+
+        must_expr = "0"
+        nice_expr = "0"
+        domain_expr = "0"
+        params: List[Any] = []
+
+        if must_have:
+            must_expr = f"SUM(CASE WHEN t.tag_type = 'tech' AND t.tag_key IN ({ph(len(must_have))}) THEN 1 ELSE 0 END)"
+            params.extend(must_have)
+        if nice_to_have:
+            nice_expr = f"SUM(CASE WHEN t.tag_type = 'tech' AND t.tag_key IN ({ph(len(nice_to_have))}) THEN 1 ELSE 0 END)"
+            params.extend(nice_to_have)
+        if domains:
+            domain_expr = f"MAX(CASE WHEN t.tag_type = 'domain' AND t.tag_key IN ({ph(len(domains))}) THEN 1 ELSE 0 END)"
+            params.extend(domains)
+
         sql = f"""
     WITH candidates AS (
       SELECT c.candidate_id,
              c.last_updated,
-             SUM(CASE WHEN t.tag_type = 'tech' AND t.tag_key IN ({','.join(['?'] * len(must_params))}) THEN 1 ELSE 0 END) AS must_hit_count,
-             SUM(CASE WHEN t.tag_type = 'tech' AND t.tag_key IN ({','.join(['?'] * len(nice_params))}) THEN 1 ELSE 0 END) AS nice_hit_count,
-             MAX(CASE WHEN t.tag_type = 'domain' AND t.tag_key IN ({','.join(['?'] * len(domain_params))}) THEN 1 ELSE 0 END) AS domain_present
+             {must_expr} AS must_hit_count,
+             {nice_expr} AS nice_hit_count,
+             {domain_expr} AS domain_present
       FROM candidate_tag t
       JOIN candidate c ON c.candidate_id = t.candidate_id
-      WHERE c.candidate_id IN ({','.join(['?'] * len(params))})
+      WHERE c.candidate_id IN ({ph(len(gated_ids))})
       GROUP BY c.candidate_id
     )
     SELECT * FROM candidates
     ORDER BY must_hit_count DESC, nice_hit_count DESC
     LIMIT ?
     """
-        params = params + must_params + nice_params + domain_params + [top_k]
+
+        params.extend(gated_ids)
+        params.append(top_k)
         plan = self.explain_query_plan(sql, params)
-        rows = self.conn.execute(sql, params).fetchall()
-        for row in rows:
-            row["must_idf_sum"] = sum(idf_must.get(tag, 0.0) for tag in must_have)
-            row["nice_idf_sum"] = sum(idf_nice.get(tag, 0.0) for tag in nice_to_have)
+        rows_raw = self.conn.execute(sql, params).fetchall()
+
+        rows: List[Dict[str, Any]] = [{k: r[k] for k in r.keys()} for r in rows_raw]
+        must_sum = sum(idf_must.get(tag, 0.0) for tag in must_have)
+        nice_sum = sum(idf_nice.get(tag, 0.0) for tag in nice_to_have)
+        for r in rows:
+            r["must_idf_sum"] = must_sum
+            r["nice_idf_sum"] = nice_sum
         return rows, sql.strip(), plan
 
     def explain_query_plan(self, sql: str, params: Iterable[Any]) -> List[Dict[str, Any]]:
