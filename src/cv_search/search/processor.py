@@ -56,12 +56,13 @@ class SearchProcessor:
         }
 
     def _run_single_seat(
-        self,
-        criteria: Dict[str, Any],
-        top_k: int,
-        mode_override: str | None,
-        vs_topk_override: int | None,
-        with_justification: bool,
+            self,
+            criteria: Dict[str, Any],
+            top_k: int,
+            mode_override: str | None,
+            vs_topk_override: int | None,
+            with_justification: bool,
+            run_dir: Optional[str] = None,
     ) -> Dict[str, Any]:
         mode = (mode_override or self.settings.search_mode).lower()
         vs_topk = vs_topk_override or self.settings.search_vs_topk
@@ -106,7 +107,7 @@ class SearchProcessor:
         final_results, fusion_dump = self.hybrid_ranker.rank(seat, lex_rows, sem_hits, mode, top_k)
 
         if with_justification and final_results:
-            justifications = self.justification_service.generate(final_results, seat)
+            justifications = self.justification_service.generate(final_results, seat, run_dir=run_dir)
             for item in final_results:
                 item["llm_justification"] = justifications.get(item["candidate_id"])
 
@@ -131,13 +132,13 @@ class SearchProcessor:
         }
 
     def search_for_seat(
-        self,
-        criteria: Dict[str, Any],
-        top_k: int = 10,
-        run_dir: str | None = None,
-        mode_override: str | None = None,
-        vs_topk_override: int | None = None,
-        with_justification: bool = True,
+            self,
+            criteria: Dict[str, Any],
+            top_k: int = 10,
+            run_dir: str | None = None,
+            mode_override: str | None = None,
+            vs_topk_override: int | None = None,
+            with_justification: bool = True,
     ) -> Dict[str, Any]:
         payload = self._run_single_seat(
             criteria=criteria,
@@ -145,18 +146,19 @@ class SearchProcessor:
             mode_override=mode_override,
             vs_topk_override=vs_topk_override,
             with_justification=with_justification,
+            run_dir=run_dir,
         )
         if run_dir:
             self.artifact_writer.write(run_dir, payload)
         return payload
 
     def search_for_project(
-        self,
-        criteria: Any,
-        top_k: int = 3,
-        run_dir: Optional[str] = None,
-        raw_text: Optional[str] = None,
-        with_justification: bool = True,
+            self,
+            criteria: Any,
+            top_k: int = 3,
+            run_dir: Optional[str] = None,
+            raw_text: Optional[str] = None,
+            with_justification: bool = True,
     ) -> Dict[str, Any]:
         crit_with_seats = self.planner.derive_project_seats(criteria, raw_text=raw_text)
         base_dict = self.planner._criteria_dict(crit_with_seats)
