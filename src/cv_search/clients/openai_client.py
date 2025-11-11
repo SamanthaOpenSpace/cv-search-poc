@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Type
 
 from openai import AzureOpenAI, OpenAI
 
@@ -53,12 +53,19 @@ class OpenAIClient:
                 raise ValueError("OPENAI_API_KEY is not set.")
             self.client = OpenAI(api_key=settings.openai_api_key_str)
 
+    def _schema_json(self, model_cls: Type[BaseModel]) -> str:
+        if hasattr(model_cls, "schema_json"):
+            return model_cls.schema_json(indent=2)  # pydantic v1
+        if hasattr(model_cls, "model_json_schema"):
+            return json.dumps(model_cls.model_json_schema(), indent=2)  # pydantic v2
+        return "{}"
+
     def _get_structured_response(
-        self,
-        prompt: str,
-        system_prompt: str,
-        model: str,
-        pydantic_model: BaseModel,
+            self,
+            prompt: str,
+            system_prompt: str,
+            model: str,
+            pydantic_model: Type[BaseModel],
     ) -> Dict[str, Any]:
         response = self.client.chat.completions.create(
             model=model,
@@ -69,7 +76,7 @@ class OpenAIClient:
                     "content": (
                         f"{system_prompt}\n\n"
                         "You must respond with JSON matching the following Pydantic schema:\n"
-                        f"{pydantic_model.schema_json(indent=2)}"
+                        f"{self._schema_json(pydantic_model)}"
                     ),
                 },
                 {"role": "user", "content": prompt},
@@ -129,11 +136,11 @@ class OpenAIClient:
         )
 
     def get_structured_cv(
-        self,
-        raw_text: str,
-        role_folder_hint: str,
-        model: str,
-        settings: Settings,
+            self,
+            raw_text: str,
+            role_folder_hint: str,
+            model: str,
+            settings: Settings,
     ) -> Dict[str, Any]:
         role_lex_list = load_role_lexicon(settings.lexicon_dir)
         tech_lex_list = load_tech_synonyms(settings.lexicon_dir)
