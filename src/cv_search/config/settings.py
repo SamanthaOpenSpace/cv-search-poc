@@ -7,7 +7,9 @@ from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+# Resolve repository root:
+# settings.py -> config -> cv_search -> src -> <repo root>
+REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
 class Settings(BaseSettings):
@@ -37,7 +39,7 @@ class Settings(BaseSettings):
     search_w_lex: float = 1.0
     search_w_sem: float = 0.8
 
-    db_path: Path = Field(default_factory=lambda: REPO_ROOT / "cvsearch.db")
+    db_path: Path = Field(default_factory=lambda: REPO_ROOT / "data" / "db" / "cvsearch.db")
     data_dir: Path = Field(default_factory=lambda: REPO_ROOT / "data")
     lexicon_dir: Path = Field(default_factory=lambda: REPO_ROOT / "data" / "lexicons")
     schema_file: Path = Field(default_factory=lambda: REPO_ROOT / "src" / "cv_search" / "db" / "schema.sql")
