@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import math
 import sqlite3
 from pathlib import Path
@@ -9,8 +10,6 @@ from cv_search.config.settings import Settings
 
 
 class CVDatabase:
-    """SQLite-backed persistence gateway for CV artifacts and metadata."""
-
     def __init__(self, settings: Settings):
         self.settings = settings
         self.db_path = str(settings.db_path)
@@ -103,13 +102,13 @@ class CVDatabase:
             VALUES(?,?,?,?,?,?,?,?,?)
                 ON CONFLICT(candidate_id) DO UPDATE SET
                 name=excluded.name,
-                location=excluded.location,
-                seniority=excluded.seniority,
-                last_updated=excluded.last_updated,
-                source_filename=excluded.source_filename,
-                source_gdrive_path=excluded.source_gdrive_path,
-                source_category=excluded.source_category,
-                source_folder_role_hint=excluded.source_folder_role_hint
+                                                 location=excluded.location,
+                                                 seniority=excluded.seniority,
+                                                 last_updated=excluded.last_updated,
+                                                 source_filename=excluded.source_filename,
+                                                 source_gdrive_path=excluded.source_gdrive_path,
+                                                 source_category=excluded.source_category,
+                                                 source_folder_role_hint=excluded.source_folder_role_hint
             """,
             (
                 cv["candidate_id"],
@@ -125,11 +124,11 @@ class CVDatabase:
         )
 
     def insert_experiences_and_tags(
-        self,
-        candidate_id: str,
-        experiences: List[Dict[str, Any]],
-        domain_tags_list: List[List[str]],
-        tech_tags_list: List[List[str]],
+            self,
+            candidate_id: str,
+            experiences: List[Dict[str, Any]],
+            domain_tags_list: List[List[str]],
+            tech_tags_list: List[List[str]],
     ) -> List[int]:
         exp_ids: List[int] = []
         exp_tech_tags_to_insert: List[Tuple[int, str, str]] = []
@@ -184,12 +183,12 @@ class CVDatabase:
         return exp_ids
 
     def upsert_candidate_tags(
-        self,
-        candidate_id: str,
-        role_tags: List[str],
-        tech_tags_top: List[str],
-        seniority: str,
-        domain_rollup: List[str],
+            self,
+            candidate_id: str,
+            role_tags: List[str],
+            tech_tags_top: List[str],
+            seniority: str,
+            domain_rollup: List[str],
     ) -> None:
         tags_to_insert: List[Tuple[str, str, str, float]] = []
 
@@ -216,22 +215,26 @@ class CVDatabase:
         )
 
     def upsert_candidate_doc(
-        self,
-        candidate_id: str,
-        summary_text: str,
-        experience_text: str,
-        tags_text: str,
-        last_updated: str,
+            self,
+            candidate_id: str,
+            summary_text: str,
+            experience_text: str,
+            tags_text: str,
+            last_updated: str,
+            location: str,
+            seniority: str,
     ) -> None:
         self.conn.execute(
             """
-            INSERT INTO candidate_doc(candidate_id, summary_text, experience_text, tags_text, last_updated)
-            VALUES (?,?,?,?,?)
+            INSERT INTO candidate_doc(candidate_id, summary_text, experience_text, tags_text, last_updated, location, seniority)
+            VALUES (?,?,?,?,?,?,?)
                 ON CONFLICT(candidate_id) DO UPDATE SET
                 summary_text = excluded.summary_text,
-                experience_text = excluded.experience_text,
-                tags_text = excluded.tags_text,
-                last_updated = excluded.last_updated
+                                                 experience_text = excluded.experience_text,
+                                                 tags_text = excluded.tags_text,
+                                                 last_updated = excluded.last_updated,
+                                                 location = excluded.location,
+                                                 seniority = excluded.seniority
             """,
             (
                 candidate_id,
@@ -239,6 +242,8 @@ class CVDatabase:
                 experience_text,
                 tags_text,
                 last_updated,
+                location,
+                seniority,
             ),
         )
 
@@ -276,7 +281,7 @@ class CVDatabase:
                 ",".join(["?"] * len(tags)),
             ),
             tuple(candidate_ids) + tuple(tags),
-        ).fetchall()
+            ).fetchall()
         result: Dict[str, Dict[str, bool]] = {}
         for row in rows:
             result.setdefault(row["candidate_id"], {})[row["tag_key"]] = True
@@ -305,14 +310,14 @@ class CVDatabase:
         return idf
 
     def rank_weighted_set(
-        self,
-        gated_ids: List[str],
-        must_have: List[str],
-        nice_to_have: List[str],
-        domains: List[str],
-        idf_must: Dict[str, float],
-        idf_nice: Dict[str, float],
-        top_k: int,
+            self,
+            gated_ids: List[str],
+            must_have: List[str],
+            nice_to_have: List[str],
+            domains: List[str],
+            idf_must: Dict[str, float],
+            idf_nice: Dict[str, float],
+            top_k: int,
     ) -> Tuple[List[Any], str, List[Dict[str, Any]]]:
         if not gated_ids:
             return [], "", []
@@ -348,3 +353,44 @@ class CVDatabase:
         cur = self.conn.execute(f"EXPLAIN QUERY PLAN {sql}", tuple(params))
         columns = [col[0] for col in cur.description]
         return [dict(zip(columns, row)) for row in cur.fetchall()]
+
+    def get_or_create_faiss_id(self, candidate_id: str) -> int:
+        row = self.conn.execute(
+            "SELECT faiss_id FROM faiss_id_map WHERE candidate_id = ?",
+            (candidate_id,),
+        ).fetchone()
+        if row:
+            return int(row["faiss_id"])
+        base = int(hashlib.sha256(candidate_id.encode("utf-8")).hexdigest()[:16], 16) & ((1 << 63) - 1)
+        start = base
+        h = base
+        while True:
+            try:
+                self.conn.execute(
+                    "INSERT INTO faiss_id_map(faiss_id, candidate_id) VALUES (?, ?)",
+                    (h, candidate_id),
+                )
+                return int(h)
+            except sqlite3.IntegrityError:
+                existing = self.conn.execute(
+                    "SELECT candidate_id FROM faiss_id_map WHERE faiss_id = ?",
+                    (h,),
+                ).fetchone()
+                if existing and existing[0] == candidate_id:
+                    return int(h)
+                h = (h + 1) & ((1 << 63) - 1)
+                if h == start:
+                    raise RuntimeError("Unable to allocate FAISS ID")
+
+    def get_full_candidate_context(self, candidate_id: str) -> Optional[Dict[str, Any]]:
+        row = self.conn.execute(
+            """
+            SELECT summary_text, experience_text, tags_text, last_updated, location, seniority
+            FROM candidate_doc
+            WHERE candidate_id = ?
+            """,
+            (candidate_id,),
+        ).fetchone()
+        if not row:
+            return None
+        return {k: row[k] for k in row.keys()}
