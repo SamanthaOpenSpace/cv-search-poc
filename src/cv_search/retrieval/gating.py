@@ -5,11 +5,20 @@ from typing import Any, Dict, List, Tuple
 from cv_search.db.database import CVDatabase
 
 
+def _normalize_seniority(s: str) -> str:
+    if not s:
+        return ""
+    s = s.strip().lower()
+    mapping = {"mid": "middle", "jr": "junior", "sr": "senior", "staff": "lead", "principal": "manager"}
+    return mapping.get(s, s)
+
+
 def _allowed_seniorities(seat_seniority: str) -> Tuple[str, ...]:
-    ladder = ("junior", "mid", "senior", "staff", "principal")
-    if seat_seniority not in ladder:
+    ladder = ("junior", "middle", "senior", "lead", "manager")
+    norm = _normalize_seniority(seat_seniority)
+    if norm not in ladder:
         return ("senior",)
-    idx = ladder.index(seat_seniority)
+    idx = ladder.index(norm)
     return ladder[idx:]
 
 
