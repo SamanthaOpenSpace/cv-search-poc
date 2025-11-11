@@ -6,26 +6,20 @@ import sqlite3
 import sys
 from pathlib import Path
 from dotenv import load_dotenv
-from typing import Dict, Any # <-- NEW/MODIFIED IMPORTS
+from typing import Dict, Any
 
-# --- REMOVED IMPORTS ---
-# import re
-# from collections import defaultdict
-# import hashlib
-# import shutil
-# from datetime import datetime
-# from cv_search.ingestion.cv_parser import CVParser
-# from concurrent.futures import ThreadPoolExecutor, as_completed
-# --- END REMOVED IMPORTS ---
 load_dotenv(dotenv_path=Path(__file__).parent / ".env", override=False)
 
+# Ensure 'src' is importable when running as a script
 sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
-from cv_search.search import SearchProcessor, default_run_dir
-from cv_search.planner.service import Planner
-import subprocess
-from cv_search.ingestion.gdrive_sync import GDriveSyncer
 
 import click
+import subprocess
+
+from cv_search.search import SearchProcessor, default_run_dir
+from cv_search.planner.service import Planner
+from cv_search.ingestion.gdrive_sync import GDriveSyncer
+from cv_search.core.criteria import Criteria, TeamMember, TeamSize
 from cv_search.db.database import CVDatabase
 from cv_search.lexicon.loader import (
     load_role_lexicon,
@@ -33,7 +27,6 @@ from cv_search.lexicon.loader import (
     load_domain_lexicon,
 )
 from cv_search.ingestion.pipeline import CVIngestionPipeline
-from cv_search.core.criteria import Criteria, TeamMember, TeamSize
 from cv_search.core.parser import parse_request
 from cv_search.config.settings import Settings
 from cv_search.clients.openai_client import OpenAIClient
@@ -42,21 +35,24 @@ from cv_search.clients.openai_client import OpenAIClient
 @click.group()
 @click.pass_context
 def cli(ctx):
-    """RAG-Challenge-2 style CLI — step-by-step build."""
+    """cv-search CLI."""
     settings = Settings()
     client = OpenAIClient(settings)
     db = CVDatabase(settings)
     ctx.obj = {"settings": settings, "client": client, "db": db}
+
 
 @cli.command("env-info")
 @click.pass_context
 def env_info_cmd(ctx):
     """Print env detection (API key masked)."""
     settings: Settings = ctx.obj["settings"]
-    def mask(s: str) -> str:
+
+    def mask(s: str | None) -> str:
         if not s:
             return "(unset)"
         return (s[:4] + "..." + s[-4:]) if len(s) > 8 else "***"
+
     click.echo(f"--- Loaded from Settings ---")
     click.echo(f"OPENAI_API_KEY: {mask(settings.openai_api_key_str)}")
     click.echo(f"OPENAI_MODEL:   {settings.openai_model}")
@@ -64,9 +60,11 @@ def env_info_cmd(ctx):
     click.echo(f"DB_PATH:        {settings.db_path}")
     click.echo(f"LEXICON_DIR:    {settings.lexicon_dir}")
 
+
 @cli.command("init-db")
 @click.pass_context
 def init_db_cmd(ctx):
+    """Initialize (or re-initialize) the SQLite schema."""
     db: CVDatabase = ctx.obj["db"]
     try:
         db.initialize_schema()
@@ -74,9 +72,11 @@ def init_db_cmd(ctx):
     finally:
         db.close()
 
+
 @cli.command("check-db")
 @click.pass_context
 def check_db_cmd(ctx):
+    """Quick DB sanity: tables + FTS availability."""
     db: CVDatabase = ctx.obj["db"]
     try:
         names = ", ".join(db.check_tables())
@@ -85,37 +85,55 @@ def check_db_cmd(ctx):
     finally:
         db.close()
 
+
 @cli.command("show-lexicons")
 @click.pass_context
 def show_lexicons_cmd(ctx):
+    """
+    Show counts and a short preview of lexicons.
+    Works with both list- and dict-based tech lexicons.
+    """
     settings: Settings = ctx.obj["settings"]
     roles = load_role_lexicon(settings.lexicon_dir)
-    techs = load_tech_synonyms(settings.lexicon_dir)
+    techs = load_tech_synonyms(settings.lexicon_dir)   # returns List[str] in current repo
     doms = load_domain_lexicon(settings.lexicon_dir)
-    click.echo(f"Roles: {len(roles)} | Tech groups: {len(techs)} | Domains: {len(doms)}")
-    for k, v in list(techs.items())[:3]:
-        click.echo(f"  {k}: {', '.join(v[:3])}{'...' if len(v)>3 else ''}")
+
+    click.echo(f"Roles: {len(roles)} | Techs: {len(techs)} | Domains: {len(doms)}")
+
+    # Backward-compatible preview: handle list or dict
+    if isinstance(techs, dict):
+        # Old synonym-map shape: { "react": ["reactjs", ...], ... }
+        for k, v in list(techs.items())[:3]:
+            more = "..." if len(v) > 3 else ""
+            click.echo(f"  {k}: {', '.join(v[:3])}{more}")
+    else:
+        # Current shape is List[str]
+        sample = ", ".join(techs[:10])
+        more = "..." if len(techs) > 10 else ""
+        click.echo(f"  Sample techs: {sample}{more}")
+
 
 @cli.command("ingest-mock")
 @click.pass_context
 def ingest_mock_cmd(ctx):
+    """Rebuild DB & FAISS from mock JSON."""
     settings: Settings = ctx.obj["settings"]
     db: CVDatabase = ctx.obj["db"]
-
     try:
         pipeline = CVIngestionPipeline(db, settings)
         n = pipeline.run_mock_ingestion()
         click.echo(f"Ingested {n} mock CVs into {db.db_path}")
-        click.echo(f"Successfully built FAISS index at {settings.faiss_index_path}")
+        click.echo(f"Built FAISS index at {settings.faiss_index_path}")
     finally:
         db.close()
 
+
 @cli.command("parse-request")
-@click.option("--text", type=str, required=True, help="Free-text client brief",
-              default='For a new fintech project raising round we need to create a brand new code development .Field: healthcare.  Need  2 .net backend dev senior on .NET microservices, Kubernetes,k8s, PostgreSQL and possibly python codebase support, power bi , Kafka, react, ts, playwright.')
+@click.option("--text", type=str, required=True, help="Free-text client brief")
 @click.option("--model", type=str, default=None, help="Override model, e.g. gpt-4.1-mini")
 @click.pass_context
 def parse_request_cmd(ctx, text, model):
+    """Parse a project brief to canonical Criteria JSON."""
     settings: Settings = ctx.obj["settings"]
     client: OpenAIClient = ctx.obj["client"]
     model_name = model or settings.openai_model
