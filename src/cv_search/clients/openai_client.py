@@ -7,7 +7,7 @@ from openai import AzureOpenAI, OpenAI
 
 from cv_search.config.settings import Settings
 from cv_search.lexicon.loader import load_domain_lexicon, load_role_lexicon, load_tech_synonyms
-from cv_search.llm.justification import CandidateJustification
+from cv_search.llm.schemas import CandidateJustification
 from cv_search.llm.logger import log_chat
 
 try:
