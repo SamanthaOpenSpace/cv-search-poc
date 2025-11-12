@@ -424,3 +424,15 @@ class CVDatabase:
         if not row:
             return None
         return row["last_updated"]
+
+    def get_last_updated_for_filenames(self, filenames: Iterable[str]) -> Dict[str, Optional[str]]:
+        unique_names = [name for name in dict.fromkeys(filenames) if name]
+        if not unique_names:
+            return {}
+        placeholders = ",".join(["?"] * len(unique_names))
+        rows = self.conn.execute(
+            f"SELECT source_filename, last_updated FROM candidate WHERE source_filename IN ({placeholders})",
+            tuple(unique_names),
+        ).fetchall()
+        existing = {row["source_filename"]: row["last_updated"] for row in rows}
+        return {name: existing.get(name) for name in unique_names}

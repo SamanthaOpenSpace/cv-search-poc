@@ -279,6 +279,39 @@ class CVIngestionPipeline:
             click.secho(f"  -> FAILED to parse {file_path.name}: {e}", fg="red")
             return "failed_parsing", file_path
 
+    def _partition_gdrive_files(
+            self,
+            files: List[Path],
+            inbox_dir: Path
+    ) -> tuple[List[Path], Dict[str, List[str]]]:
+        skipped: Dict[str, List[str]] = defaultdict(list)
+        if not files:
+            return [], skipped
+        resolved_inbox = inbox_dir.resolve(strict=False)
+        last_updated_map = self.db.get_last_updated_for_filenames([p.name for p in files])
+        selected: List[Path] = []
+        for file_path in files:
+            resolved_path = file_path.resolve(strict=False)
+            try:
+                relative_path = resolved_path.relative_to(resolved_inbox)
+            except ValueError:
+                display_path = str(resolved_path)
+                click.secho(
+                    f"Skipping {display_path}: outside Google Drive sync directory.",
+                    fg="yellow"
+                )
+                skipped["outside_gdrive"].append(display_path)
+                continue
+            mtime_iso = datetime.fromtimestamp(file_path.stat().st_mtime).isoformat()
+            last_upd = last_updated_map.get(file_path.name)
+            if last_upd and last_upd == mtime_iso:
+                display_path = str(relative_path.as_posix())
+                click.echo(f"Skipping {display_path}: not modified since last ingestion.")
+                skipped["unchanged"].append(display_path)
+                continue
+            selected.append(file_path)
+        return selected, skipped
+
     def run_gdrive_ingestion(self, client: OpenAIClient, target_filename: str | None = None) -> Dict[str, Any]:
         parser = CVParser()
 
@@ -303,15 +336,9 @@ class CVIngestionPipeline:
             click.echo(f"No .pptx files found in {inbox_dir}")
             return {"processed_count": 0, "status": "no_files_found"}
 
-        skipped_unchanged: List[str] = []
-        filtered: List[Path] = []
-        for p in pptx_files:
-            mtime_iso = datetime.fromtimestamp(p.stat().st_mtime).isoformat()
-            last_upd = self.db.get_candidate_last_updated_by_source_filename(p.name)
-            if last_upd and last_upd == mtime_iso:
-                skipped_unchanged.append(str(p.relative_to(inbox_dir)))
-            else:
-                filtered.append(p)
+        filtered, skip_reasons = self._partition_gdrive_files(pptx_files, inbox_dir)
+        skipped_unchanged = skip_reasons.get("unchanged", [])
+        skipped_outside = skip_reasons.get("outside_gdrive", [])
 
         if not filtered and skipped_unchanged:
             click.echo("No new or modified .pptx files to process.")
@@ -319,6 +346,21 @@ class CVIngestionPipeline:
                 "processed_count": 0,
                 "status": "no_changes",
                 "skipped_unchanged": skipped_unchanged,
+                "skipped_outside_gdrive": skipped_outside,
+                "skipped_roles": {},
+                "skipped_ambiguous": [],
+                "failed_files": [],
+                "unmapped_tags": [],
+                "json_output_dir": str(json_output_dir),
+            }
+
+        if not filtered:
+            click.echo("No eligible .pptx files to process from Google Drive sync directory.")
+            return {
+                "processed_count": 0,
+                "status": "no_eligible_files",
+                "skipped_unchanged": skipped_unchanged,
+                "skipped_outside_gdrive": skipped_outside,
                 "skipped_roles": {},
                 "skipped_ambiguous": [],
                 "failed_files": [],
@@ -386,6 +428,7 @@ class CVIngestionPipeline:
             "unmapped_tags": all_unmapped_tags,
             "json_output_dir": str(json_output_dir),
             "skipped_unchanged": skipped_unchanged,
+            "skipped_outside_gdrive": skipped_outside,
         }
 
     def run_ingestion_from_list(self, cvs: List[Dict[str, Any]]) -> int:
