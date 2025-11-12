@@ -111,6 +111,8 @@ uv run python main.py ingest-mock
 ```bash
 uv run python main.py sync-gdrive     # downloads from Drive → local inbox
 uv run python main.py ingest-gdrive   # parses PPTX → JSON, upserts DB & FAISS
+uv run python main.py ingest-gdrive --file "test.pptx"  # parses PPTX → JSON, upserts DB & FAISS
+
 ```
 
 - **Current status:** ingestion calls `get_or_create_faiss_id(...)` which is not present in `CVDatabase`; implement this helper before this flow can succeed. See **Known gaps**.

@@ -13,5 +13,31 @@
   "proptech_real_estate",
   "public_sector",
   "saas_b2b",
-  "telecom"
+  "telecom",
+
+  "banking",
+
+  "marketplaces",
+  "travel_hospitality",
+  "food_delivery",
+
+  "streaming_media",
+  "sports_tech",
+  "gaming_esports",
+  "social_media",
+
+  "marketing_tech",
+  "legaltech",
+  "govtech",
+
+  "manufacturing_industry",
+  "industrial_iot",
+
+  "agritech",
+
+
+  "devtools",
+  "cybersecurity",
+  "cloud_platforms",
+  "ai_ml_platforms"
 ]

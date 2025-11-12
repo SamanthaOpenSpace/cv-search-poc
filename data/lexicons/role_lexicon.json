@@ -29,14 +29,25 @@
   "llm_engineer",
   "prompt_engineer",
   "rag_engineer",
-  "ai_inference_engineer",
-  "ai_compiler_engineer",
-  "ml_platform_engineer",
-  "evaluation_engineer",
-  "ai_safety_engineer",
-  "ai_research_engineer",
-  "knowledge_engineer",
-  "multimodal_engineer",
-  "speech_ai_engineer",
-  "agent_engineer"
+
+  "platform_engineer",
+  "site_reliability_engineer",
+  "infrastructure_engineer",
+  "application_security_engineer",
+  "cloud_security_engineer",
+  "devsecops_engineer",
+
+  "qa_automation_engineer",
+
+  "solution_architect",
+  "enterprise_architect",
+
+  "product_designer",
+
+  "engineering_manager",
+  "tech_lead",
+  "team_lead",
+  "delivery_manager",
+  "technical_support_engineer",
+  "release_manager"
 ]
