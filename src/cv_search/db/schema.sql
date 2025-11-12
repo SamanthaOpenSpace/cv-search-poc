@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS skill (
 -- Normalized tags -----------------------------------------------------------
 CREATE TABLE IF NOT EXISTS candidate_tag (
                                              candidate_id TEXT NOT NULL,
-                                             tag_type     TEXT NOT NULL CHECK (tag_type IN ('role','tech','domain','seniority')),
+                                             tag_type     TEXT NOT NULL CHECK (tag_type IN ('role','tech','domain','seniority','expertise')),
     tag_key      TEXT NOT NULL,
     weight       REAL NOT NULL DEFAULT 1.0,
     FOREIGN KEY(candidate_id) REFERENCES candidate(candidate_id) ON DELETE CASCADE,

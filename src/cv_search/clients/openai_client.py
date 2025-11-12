@@ -6,7 +6,12 @@ from typing import Any, Dict, List, Type
 from openai import AzureOpenAI, OpenAI
 
 from cv_search.config.settings import Settings
-from cv_search.lexicon.loader import load_domain_lexicon, load_role_lexicon, load_tech_synonyms
+from cv_search.lexicon.loader import (
+    load_domain_lexicon,
+    load_expertise_lexicon,
+    load_role_lexicon,
+    load_tech_synonyms,
+)
 from cv_search.llm.schemas import CandidateJustification
 from cv_search.llm.logger import log_chat
 
@@ -29,6 +34,7 @@ class LLMCV(BaseModel):
     location: str | None = None
     seniority: str
     role_tags: List[str]
+    expertise_tags: List[str] = Field(default_factory=list)
     summary: str | None = None
     experience: List[Dict[str, Any]]
     tech_tags: List[str]
@@ -158,6 +164,7 @@ class OpenAIClient:
         role_lex_list = load_role_lexicon(settings.lexicon_dir)
         tech_lex_list = load_tech_synonyms(settings.lexicon_dir)
         domain_lex_list = load_domain_lexicon(settings.lexicon_dir)
+        expertise_lex_list = load_expertise_lexicon(settings.lexicon_dir)
 
         system_prompt = f"""
         You are an expert CV parser. Your task is to parse raw text from a CV slide deck
@@ -168,6 +175,7 @@ class OpenAIClient:
         Available Role Lexicon (Canonical Keys): {json.dumps(role_lex_list, indent=2)}
         Available Tech Lexicon (Canonical Keys): {json.dumps(tech_lex_list, indent=2)}
         Available Domain Lexicon (Canonical Keys): {json.dumps(domain_lex_list, indent=2)}
+        Available Role-to-Expertise Lexicon: {json.dumps(expertise_lex_list, indent=2)}
 
         Strictly follow these rules:
         1.  `source_folder_role_hint`:
@@ -177,9 +185,11 @@ class OpenAIClient:
             * If the HINT is **not** a valid role, you **MUST** set this field to `null`.
 
         2.  `role_tags`: Extract all relevant roles from the CV *text itself*, mapping them to the Role Lexicon keys.
-        3.  `tech_tags`: Extract all technologies from the CV *text*, mapping them to the Tech Lexicon keys.
-        4.  `unmapped_tags`: List any tech/tools found but *not* in the lexicons as a comma-separated string.
-        5.  `experience.domain_tags` / `experience.tech_tags`: Map these to the lexicons as well.
+        3.  `expertise_tags`: Infer direction/expertise areas for the candidate. Use the Role-to-Expertise lexicon to
+            choose canonical expertise keys aligned with the detected roles whenever possible.
+        4.  `tech_tags`: Extract all technologies from the CV *text*, mapping them to the Tech Lexicon keys.
+        5.  `unmapped_tags`: List any tech/tools found but *not* in the lexicons as a comma-separated string.
+        6.  `experience.domain_tags` / `experience.tech_tags`: Map these to the lexicons as well.
         """
 
         return self._get_structured_response(

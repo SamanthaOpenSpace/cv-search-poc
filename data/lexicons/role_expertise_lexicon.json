@@ -1,0 +1,22 @@
+[
+  {
+    "roles": ["backend_engineer", "fullstack_engineer"],
+    "expertises": [".net", "java", "python_backend", "node_backend"]
+  },
+  {
+    "roles": ["frontend_engineer", "fullstack_engineer"],
+    "expertises": ["react_frontend", "angular_frontend", "vue_frontend", "typescript_ui"]
+  },
+  {
+    "roles": ["data_engineer", "ml_engineer"],
+    "expertises": ["spark_data", "python_data", "mlops", "feature_engineering"]
+  },
+  {
+    "roles": ["mobile_engineer"],
+    "expertises": ["ios_swift", "android_kotlin", "react_native", "flutter"]
+  },
+  {
+    "roles": ["qa_engineer", "support_engineer"],
+    "expertises": ["automation_testing", "manual_testing", "sre_tooling", "release_management"]
+  }
+]

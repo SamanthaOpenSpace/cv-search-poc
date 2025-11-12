@@ -22,9 +22,10 @@ from cv_search.ingestion.gdrive_sync import GDriveSyncer
 from cv_search.core.criteria import Criteria, TeamMember, TeamSize
 from cv_search.db.database import CVDatabase
 from cv_search.lexicon.loader import (
+    load_domain_lexicon,
+    load_expertise_lexicon,
     load_role_lexicon,
     load_tech_synonyms,
-    load_domain_lexicon,
 )
 from cv_search.ingestion.pipeline import CVIngestionPipeline
 from cv_search.core.parser import parse_request
@@ -97,8 +98,10 @@ def show_lexicons_cmd(ctx):
     roles = load_role_lexicon(settings.lexicon_dir)
     techs = load_tech_synonyms(settings.lexicon_dir)   # returns List[str] in current repo
     doms = load_domain_lexicon(settings.lexicon_dir)
+    expertise = load_expertise_lexicon(settings.lexicon_dir)
 
-    click.echo(f"Roles: {len(roles)} | Techs: {len(techs)} | Domains: {len(doms)}")
+    expertise_count = sum(len(entry["expertises"]) for entry in expertise)
+    click.echo(f"Roles: {len(roles)} | Techs: {len(techs)} | Domains: {len(doms)} | Expertise: {expertise_count}")
 
     # Backward-compatible preview: handle list or dict
     if isinstance(techs, dict):
