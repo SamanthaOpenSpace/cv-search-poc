@@ -1,0 +1,21 @@
+name: Sync Fork
+
+on:
+  schedule:
+    - cron: '0 3 * * *'   # daily at 03:00 UTC
+  workflow_dispatch:       # allow manual runs
+
+permissions:
+  contents: write          # needed to push updates to your fork
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: tgymnich/fork-sync@v2.0
+        with:
+          owner: mikekozlov    # upstream owner (NOT your username)
+          # repo: cv-search-poc  # uncomment if your fork name differs from upstream
+          head: main           # upstream branch
+          base: main           # your fork branch
+          merge_method: merge  # or 'rebase' or 'squash'
