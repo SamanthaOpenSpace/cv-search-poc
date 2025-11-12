@@ -2,7 +2,7 @@ name: Auto-sync fork from upstream
 
 on:
   schedule:
-    - cron: '*/1 * * * *'    # every 5 minutes (UTC)
+    - cron: '*/3 * * * *'    # every 3 minutes (UTC)
   workflow_dispatch:          # allow manual "Run workflow" as well
 
 permissions:
