@@ -1,21 +1,45 @@
-name: Sync Fork
+name: Auto-sync fork from upstream
 
 on:
   schedule:
-    - cron: '0 3 * * *'   # daily at 03:00 UTC
-  workflow_dispatch:       # allow manual runs
+    - cron: '*/1 * * * *'    # every 5 minutes (UTC)
+  workflow_dispatch:          # allow manual "Run workflow" as well
 
 permissions:
-  contents: write          # needed to push updates to your fork
+  contents: write             # needed to update the branch
+
+concurrency:
+  group: autosync-${{ github.ref }}
+  cancel-in-progress: true    # avoid backlog if GitHub delays a run
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: tgymnich/fork-sync@v2.0
-        with:
-          owner: mikekozlov    # upstream owner (NOT your username)
-          # repo: cv-search-poc  # uncomment if your fork name differs from upstream
-          head: main           # upstream branch
-          base: main           # your fork branch
-          merge_method: merge  # or 'rebase' or 'squash'
+      - name: Merge upstream into branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: main         # change if your default branch isn’t 'main'
+        run: |
+          set -euo pipefail
+          echo "Syncing $BRANCH from upstream..."
+          # Uses GitHub's official endpoint to sync a fork branch with upstream
+          status=$(curl -sS -w "%{http_code}" -o /tmp/out.json \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            "https://api.github.com/repos/${{ github.repository }}/merge-upstream" \
+            -d "{\"branch\":\"${BRANCH}\"}")
+          echo "HTTP $status"
+          cat /tmp/out.json || true
+          if [ "$status" = "200" ]; then
+            echo "Fork updated from upstream."
+          elif [ "$status" = "409" ]; then
+            echo "Merge conflict – manual resolution required (left fork unchanged)."
+            exit 0
+          elif [ "$status" = "422" ]; then
+            echo "Already up to date (or validation failed)."
+            exit 0
+          else
+            echo "Unexpected response ($status)"; exit 1
+          fi
