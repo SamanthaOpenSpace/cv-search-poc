@@ -17,33 +17,53 @@ jobs:
 
       - name: Create/Update PR to upstream if this branch is ahead
         env:
-          GH_TOKEN: ${{ secrets.UPSTREAM_PR_TOKEN }}   # your PAT
+          GH_TOKEN: ${{ secrets.UPSTREAM_PR_TOKEN }}
           UPSTREAM_REPO: mikekozlov/cv-search-poc
           BASE_BRANCH: main
           HEAD_OWNER: ${{ github.repository_owner }}
           HEAD_BRANCH: ${{ github.ref_name }}
         run: |
           set -euo pipefail
+      
+          # Are we ahead of upstream?
           cmp=$(curl -sSL -H "Accept: application/vnd.github+json" \
                 "https://api.github.com/repos/${UPSTREAM_REPO}/compare/${BASE_BRANCH}...${HEAD_OWNER}:${HEAD_BRANCH}")
           ahead=$(echo "$cmp" | jq -r '.ahead_by // 0')
-          if [ "$ahead" -le 0 ]; then echo "Not ahead"; exit 0; fi
-
+          if [ "$ahead" -le 0 ]; then
+            echo "Not ahead (ahead_by=${ahead}). Nothing to PR."
+            exit 0
+          fi
+      
+          # If an open PR from this fork branch already exists, ensure title has mk-<number> prefix and exit.
           existing=$(gh pr list -R "${UPSTREAM_REPO}" \
                        --head "${HEAD_OWNER}:${HEAD_BRANCH}" --base "${BASE_BRANCH}" \
-                       --state open --json number --jq '.[0].number')
+                       --state open --json number,title --jq '.[0]')
           if [ -n "${existing}" ] && [ "${existing}" != "null" ]; then
-            echo "PR #${existing} already open"; exit 0
+            pr_number=$(echo "$existing" | jq -r '.number')
+            current_title=$(echo "$existing" | jq -r '.title')
+            if ! printf '%s' "$current_title" | grep -qE '^mk-[0-9]+'; then
+              new_title="mk-${pr_number} ${current_title}"
+              gh pr edit -R "${UPSTREAM_REPO}" "${pr_number}" --title "${new_title}"
+              echo "Renamed existing PR #${pr_number} → ${new_title}"
+            else
+              echo "Existing PR #${pr_number} already has mk- prefix."
+            fi
+            exit 0
           fi
-
-          title="Auto PR: ${HEAD_OWNER}:${HEAD_BRANCH} → ${UPSTREAM_REPO}:${BASE_BRANCH}"
-          body="Created automatically because the fork branch is ahead."
-
-          gh pr create -R "${UPSTREAM_REPO}" \
+      
+          # Create the PR with a temporary title, get its number, then rename with mk-<number> prefix
+          temp_title="Auto PR: ${HEAD_OWNER}:${HEAD_BRANCH} → ${UPSTREAM_REPO}:${BASE_BRANCH}"
+          body="This PR was created automatically because ${HEAD_OWNER}:${HEAD_BRANCH} is ahead of ${UPSTREAM_REPO}:${BASE_BRANCH}."
+      
+          pr_number=$(gh pr create -R "${UPSTREAM_REPO}" \
             --base "${BASE_BRANCH}" \
             --head "${HEAD_OWNER}:${HEAD_BRANCH}" \
-            --title "${title}" \
+            --title "${temp_title}" \
             --body "${body}" \
-            --no-maintainer-edit
-
-          echo "Opened a new PR to ${UPSTREAM_REPO}."
+            --no-maintainer-edit \
+            --json number --jq '.number')
+      
+          final_title="mk-${pr_number} ${temp_title}"
+          gh pr edit -R "${UPSTREAM_REPO}" "${pr_number}" --title "${final_title}"
+          echo "Opened PR #${pr_number} → ${final_title}"
+      
