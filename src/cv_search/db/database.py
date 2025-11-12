@@ -186,6 +186,7 @@ class CVDatabase:
             self,
             candidate_id: str,
             role_tags: List[str],
+            expertise_tags: List[str],
             tech_tags_top: List[str],
             seniority: str,
             domain_rollup: List[str],
@@ -195,6 +196,9 @@ class CVDatabase:
         for role in role_tags:
             if role:
                 tags_to_insert.append((candidate_id, "role", role, 2.0))
+        for expertise in expertise_tags:
+            if expertise:
+                tags_to_insert.append((candidate_id, "expertise", expertise, 1.6))
         for tag in tech_tags_top:
             if tag:
                 tags_to_insert.append((candidate_id, "tech", tag, 1.5))

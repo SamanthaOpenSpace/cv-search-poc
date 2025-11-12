@@ -62,11 +62,12 @@ class CVIngestionPipeline:
         summary_text = cv.get("summary", "") or ""
         exp_lines = [self._mk_experience_line(e) for e in (cv.get("experience", []) or [])]
         experience_text = " \n".join([ln for ln in exp_lines if ln])
-        roles   = self._canon_tags(cv.get("role_tags", []) or [])
-        techs   = self._canon_tags(cv.get("tech_tags", []) or [])
-        senior  = self._canon_tags([cv.get("seniority", "")]) if cv.get("seniority") else []
+        roles = self._canon_tags(cv.get("role_tags", []) or [])
+        expertise = self._canon_tags(cv.get("expertise_tags", []) or [])
+        techs = self._canon_tags(cv.get("tech_tags", []) or [])
+        senior = self._canon_tags([cv.get("seniority", "")]) if cv.get("seniority") else []
         domains = self._canon_tags(domain_rollup)
-        distinct = self._uniq(roles + techs + domains + senior)
+        distinct = self._uniq(roles + expertise + techs + domains + senior)
         tags_text = " ".join(distinct)
         return summary_text, experience_text, tags_text
 
@@ -78,6 +79,7 @@ class CVIngestionPipeline:
         self.db.remove_candidate_derived(candidate_id)
 
         role_tags_top = self._canon_tags(cv.get("role_tags", []) or [])
+        expertise_tags_top = self._canon_tags(cv.get("expertise_tags", []) or [])
         tech_tags_top = self._canon_tags(cv.get("tech_tags", []) or [])
         seniority = (cv.get("seniority", "") or "").strip().lower()
 
@@ -96,6 +98,7 @@ class CVIngestionPipeline:
         self.db.upsert_candidate_tags(
             candidate_id,
             role_tags=role_tags_top,
+            expertise_tags=expertise_tags_top,
             tech_tags_top=tech_tags_top,
             seniority=seniority,
             domain_rollup=domain_rollup,
@@ -117,6 +120,7 @@ class CVIngestionPipeline:
             "role": role_tags_top[0] if role_tags_top else "",
             "seniority": seniority,
             "domains": domain_rollup,
+            "expertise": expertise_tags_top,
             "tech": tech_tags_top,
         }
 
@@ -126,6 +130,7 @@ class CVIngestionPipeline:
             f" | role={role}"
             f" | seniority={vs_attributes.get('seniority') or ''}"
             f" | domains=[{', '.join(vs_attributes.get('domains') or [])}]"
+            f" | expertise=[{', '.join(vs_attributes.get('expertise') or [])}]"
             f" | tech=[{', '.join(vs_attributes.get('tech') or [])}]"
         )
         parts = [

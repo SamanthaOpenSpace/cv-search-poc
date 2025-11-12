@@ -5,14 +5,29 @@
     "location": "USA",
     "seniority": "senior",
     "last_updated": "2025-09-18",
-    "role_tags": ["frontend_engineer"],
+    "role_tags": [
+      "frontend_engineer"
+    ],
     "summary": "Senior Frontend Engineer focusing on high-performance e-commerce UIs, SSR, and testing.",
     "experience": [
       {
         "title": "Senior Frontend Engineer",
         "company": "ShopVerse",
-        "domain_tags": ["ecommerce_retail"],
-        "tech_tags": ["react", "nextjs", "typescript", "redux", "graphql", "apollo_graphql", "nodejs", "jest", "playwright", "tailwindcss"],
+        "domain_tags": [
+          "ecommerce_retail"
+        ],
+        "tech_tags": [
+          "react",
+          "nextjs",
+          "typescript",
+          "redux",
+          "graphql",
+          "apollo_graphql",
+          "nodejs",
+          "jest",
+          "playwright",
+          "tailwindcss"
+        ],
         "from": "2022-03",
         "to": "2025-09",
         "highlights": [
@@ -24,8 +39,15 @@
       {
         "title": "Frontend Engineer",
         "company": "B2BCloud",
-        "domain_tags": ["saas_b2b"],
-        "tech_tags": ["react", "typescript", "webpack", "cypress"],
+        "domain_tags": [
+          "saas_b2b"
+        ],
+        "tech_tags": [
+          "react",
+          "typescript",
+          "webpack",
+          "cypress"
+        ],
         "from": "2019-02",
         "to": "2022-02",
         "highlights": [
@@ -33,7 +55,27 @@
         ]
       }
     ],
-    "tech_tags": ["react", "nextjs", "typescript", "redux", "graphql", "apollo_graphql", "nodejs", "jest", "playwright", "cypress", "vite", "webpack", "tailwindcss", "css", "html"]
+    "tech_tags": [
+      "react",
+      "nextjs",
+      "typescript",
+      "redux",
+      "graphql",
+      "apollo_graphql",
+      "nodejs",
+      "jest",
+      "playwright",
+      "cypress",
+      "vite",
+      "webpack",
+      "tailwindcss",
+      "css",
+      "html"
+    ],
+    "expertise_tags": [
+      "react_frontend",
+      "typescript_ui"
+    ]
   },
   {
     "candidate_id": "cvfe02-c3d4",
@@ -41,14 +83,24 @@
     "location": "India",
     "seniority": "middle",
     "last_updated": "2025-09-18",
-    "role_tags": ["frontend_engineer"],
+    "role_tags": [
+      "frontend_engineer"
+    ],
     "summary": "Frontend Engineer specialized in Angular apps for fintech dashboards and internal tools.",
     "experience": [
       {
         "title": "Frontend Engineer",
         "company": "PayMatrix",
-        "domain_tags": ["fintech"],
-        "tech_tags": ["angular", "typescript", "jest", "cypress", "tailwindcss"],
+        "domain_tags": [
+          "fintech"
+        ],
+        "tech_tags": [
+          "angular",
+          "typescript",
+          "jest",
+          "cypress",
+          "tailwindcss"
+        ],
         "from": "2021-01",
         "to": "2025-07",
         "highlights": [
@@ -57,7 +109,21 @@
         ]
       }
     ],
-    "tech_tags": ["angular", "typescript", "javascript", "jest", "cypress", "webpack", "tailwindcss", "html", "css"]
+    "tech_tags": [
+      "angular",
+      "typescript",
+      "javascript",
+      "jest",
+      "cypress",
+      "webpack",
+      "tailwindcss",
+      "html",
+      "css"
+    ],
+    "expertise_tags": [
+      "react_frontend",
+      "angular_frontend"
+    ]
   },
   {
     "candidate_id": "cvfe03-e5f6",
@@ -65,14 +131,26 @@
     "location": "Italy",
     "seniority": "lead",
     "last_updated": "2025-09-18",
-    "role_tags": ["frontend_engineer"],
+    "role_tags": [
+      "frontend_engineer"
+    ],
     "summary": "Lead UI Engineer delivering accessible healthtech web apps with Vue/Nuxt and GraphQL.",
     "experience": [
       {
         "title": "Lead UI Engineer",
         "company": "CareDash",
-        "domain_tags": ["healthtech"],
-        "tech_tags": ["vue", "nuxt", "typescript", "graphql", "jest", "playwright", "tailwindcss"],
+        "domain_tags": [
+          "healthtech"
+        ],
+        "tech_tags": [
+          "vue",
+          "nuxt",
+          "typescript",
+          "graphql",
+          "jest",
+          "playwright",
+          "tailwindcss"
+        ],
         "from": "2020-05",
         "to": "2025-08",
         "highlights": [
@@ -81,7 +159,19 @@
         ]
       }
     ],
-    "tech_tags": ["vue", "nuxt", "typescript", "graphql", "jest", "playwright", "vite", "tailwindcss", "css", "html"]
+    "tech_tags": [
+      "vue",
+      "nuxt",
+      "typescript",
+      "graphql",
+      "jest",
+      "playwright",
+      "vite",
+      "tailwindcss",
+      "css",
+      "html"
+    ],
+    "expertise_tags": []
   },
   {
     "candidate_id": "cvfe04-g7h8",
@@ -89,14 +179,24 @@
     "location": "Poland",
     "seniority": "junior",
     "last_updated": "2025-09-18",
-    "role_tags": ["frontend_engineer"],
+    "role_tags": [
+      "frontend_engineer"
+    ],
     "summary": "Junior Frontend Developer passionate about Svelte/SvelteKit and performance tuning for media sites.",
     "experience": [
       {
         "title": "Frontend Developer",
         "company": "Streamly Lite",
-        "domain_tags": ["gaming_media"],
-        "tech_tags": ["svelte", "sveltekit", "typescript", "vite", "cypress"],
+        "domain_tags": [
+          "gaming_media"
+        ],
+        "tech_tags": [
+          "svelte",
+          "sveltekit",
+          "typescript",
+          "vite",
+          "cypress"
+        ],
         "from": "2023-02",
         "to": "2025-09",
         "highlights": [
@@ -105,7 +205,16 @@
         ]
       }
     ],
-    "tech_tags": ["svelte", "sveltekit", "typescript", "vite", "cypress", "css", "html"]
+    "tech_tags": [
+      "svelte",
+      "sveltekit",
+      "typescript",
+      "vite",
+      "cypress",
+      "css",
+      "html"
+    ],
+    "expertise_tags": []
   },
   {
     "candidate_id": "cvfe05-i9j0",
@@ -113,14 +222,29 @@
     "location": "Spain",
     "seniority": "senior",
     "last_updated": "2025-09-18",
-    "role_tags": ["frontend_engineer"],
+    "role_tags": [
+      "frontend_engineer"
+    ],
     "summary": "Principal Frontend Engineer leading design systems and large-scale React applications for edtech.",
     "experience": [
       {
         "title": "Principal Frontend Engineer",
         "company": "LearnFlow",
-        "domain_tags": ["edtech"],
-        "tech_tags": ["react", "typescript", "nextjs", "redux", "graphql", "apollo_graphql", "jest", "vitest", "playwright", "tailwindcss"],
+        "domain_tags": [
+          "edtech"
+        ],
+        "tech_tags": [
+          "react",
+          "typescript",
+          "nextjs",
+          "redux",
+          "graphql",
+          "apollo_graphql",
+          "jest",
+          "vitest",
+          "playwright",
+          "tailwindcss"
+        ],
         "from": "2019-09",
         "to": "2025-09",
         "highlights": [
@@ -129,7 +253,22 @@
         ]
       }
     ],
-    "tech_tags": ["react", "nextjs", "typescript", "redux", "graphql", "apollo_graphql", "jest", "vitest", "playwright", "tailwindcss", "css", "html", "nodejs"]
+    "tech_tags": [
+      "react",
+      "nextjs",
+      "typescript",
+      "redux",
+      "graphql",
+      "apollo_graphql",
+      "jest",
+      "vitest",
+      "playwright",
+      "tailwindcss",
+      "css",
+      "html",
+      "nodejs"
+    ],
+    "expertise_tags": []
   },
   {
     "candidate_id": "cvnet01-k1l2",
@@ -137,14 +276,31 @@
     "location": "UK",
     "seniority": "senior",
     "last_updated": "2025-09-18",
-    "role_tags": ["backend_engineer"],
+    "role_tags": [
+      "backend_engineer"
+    ],
     "summary": "Senior Backend Engineer (.NET) building event-driven fintech services on Azure.",
     "experience": [
       {
         "title": ".NET Backend Engineer",
         "company": "FinNova",
-        "domain_tags": ["fintech"],
-        "tech_tags": ["csharp", "dotnet", "aspnet_core", "grpc", "sql_server", "redis", "kafka", "docker", "kubernetes", "azure", "azure_functions", "azure_service_bus"],
+        "domain_tags": [
+          "fintech"
+        ],
+        "tech_tags": [
+          "csharp",
+          "dotnet",
+          "aspnet_core",
+          "grpc",
+          "sql_server",
+          "redis",
+          "kafka",
+          "docker",
+          "kubernetes",
+          "azure",
+          "azure_functions",
+          "azure_service_bus"
+        ],
         "from": "2021-04",
         "to": "2025-09",
         "highlights": [
@@ -153,7 +309,25 @@
         ]
       }
     ],
-    "tech_tags": ["csharp", "dotnet", "aspnet_core", "grpc", "sql_server", "redis", "kafka", "docker", "kubernetes", "azure", "azure_functions", "azure_service_bus", "xunit"]
+    "tech_tags": [
+      "csharp",
+      "dotnet",
+      "aspnet_core",
+      "grpc",
+      "sql_server",
+      "redis",
+      "kafka",
+      "docker",
+      "kubernetes",
+      "azure",
+      "azure_functions",
+      "azure_service_bus",
+      "xunit"
+    ],
+    "expertise_tags": [
+      ".net",
+      "node_backend"
+    ]
   },
   {
     "candidate_id": "cvnet02-m3n4",
@@ -161,14 +335,27 @@
     "location": "Germany",
     "seniority": "middle",
     "last_updated": "2025-09-18",
-    "role_tags": ["backend_engineer"],
+    "role_tags": [
+      "backend_engineer"
+    ],
     "summary": ".NET Backend Developer focused on logistics integrations and resilient APIs.",
     "experience": [
       {
         "title": "Backend Developer (.NET)",
         "company": "FleetChain",
-        "domain_tags": ["logistics_supply_chain"],
-        "tech_tags": ["csharp", "dotnet", "aspnet_core", "postgresql", "rabbitmq", "docker", "kubernetes", "azure"],
+        "domain_tags": [
+          "logistics_supply_chain"
+        ],
+        "tech_tags": [
+          "csharp",
+          "dotnet",
+          "aspnet_core",
+          "postgresql",
+          "rabbitmq",
+          "docker",
+          "kubernetes",
+          "azure"
+        ],
         "from": "2020-06",
         "to": "2025-08",
         "highlights": [
@@ -177,7 +364,18 @@
         ]
       }
     ],
-    "tech_tags": ["csharp", "dotnet", "aspnet_core", "postgresql", "rabbitmq", "docker", "kubernetes", "azure", "nunit"]
+    "tech_tags": [
+      "csharp",
+      "dotnet",
+      "aspnet_core",
+      "postgresql",
+      "rabbitmq",
+      "docker",
+      "kubernetes",
+      "azure",
+      "nunit"
+    ],
+    "expertise_tags": []
   },
   {
     "candidate_id": "cvnet03-o5p6",
@@ -185,14 +383,32 @@
     "location": "Portugal",
     "seniority": "senior",
     "last_updated": "2025-09-18",
-    "role_tags": ["backend_engineer"],
+    "role_tags": [
+      "backend_engineer"
+    ],
     "summary": "Lead .NET Engineer delivering secure insurance platforms with modern auth and Azure services.",
     "experience": [
       {
         "title": "Lead .NET Engineer",
         "company": "InsurePlus",
-        "domain_tags": ["insurance"],
-        "tech_tags": ["csharp", "dotnet", "aspnet_core", "sql_server", "redis", "grpc", "docker", "kubernetes", "azure", "azure_key_vault", "azure_ad", "oauth2", "oidc"],
+        "domain_tags": [
+          "insurance"
+        ],
+        "tech_tags": [
+          "csharp",
+          "dotnet",
+          "aspnet_core",
+          "sql_server",
+          "redis",
+          "grpc",
+          "docker",
+          "kubernetes",
+          "azure",
+          "azure_key_vault",
+          "azure_ad",
+          "oauth2",
+          "oidc"
+        ],
         "from": "2018-11",
         "to": "2025-09",
         "highlights": [
@@ -201,6 +417,22 @@
         ]
       }
     ],
-    "tech_tags": ["csharp", "dotnet", "aspnet_core", "sql_server", "redis", "grpc", "docker", "kubernetes", "azure", "azure_key_vault", "azure_ad", "oauth2", "oidc", "mstest"]
+    "tech_tags": [
+      "csharp",
+      "dotnet",
+      "aspnet_core",
+      "sql_server",
+      "redis",
+      "grpc",
+      "docker",
+      "kubernetes",
+      "azure",
+      "azure_key_vault",
+      "azure_ad",
+      "oauth2",
+      "oidc",
+      "mstest"
+    ],
+    "expertise_tags": []
   }
 ]
