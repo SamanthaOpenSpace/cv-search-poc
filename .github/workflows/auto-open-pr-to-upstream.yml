@@ -17,47 +17,33 @@ jobs:
 
       - name: Create/Update PR to upstream if this branch is ahead
         env:
-          # Your secret PAT; required to create a PR in the upstream repo
-          GH_TOKEN: ${{ secrets.UPSTREAM_PR_TOKEN }}
-          UPSTREAM_REPO: mikekozlov/cv-search-poc   # <— change if different
-          BASE_BRANCH:   main                        # upstream base branch
-          HEAD_OWNER:    ${{ github.repository_owner }}
-          HEAD_BRANCH:   ${{ github.ref_name }}
+          GH_TOKEN: ${{ secrets.UPSTREAM_PR_TOKEN }}   # your PAT
+          UPSTREAM_REPO: mikekozlov/cv-search-poc
+          BASE_BRANCH: main
+          HEAD_OWNER: ${{ github.repository_owner }}
+          HEAD_BRANCH: ${{ github.ref_name }}
         run: |
           set -euo pipefail
-
-          echo "Checking if ${HEAD_OWNER}:${HEAD_BRANCH} is ahead of ${UPSTREAM_REPO}:${BASE_BRANCH}"
-
-          # Use compare API across forks to see if we're ahead (no auth needed for public repos):
           cmp=$(curl -sSL -H "Accept: application/vnd.github+json" \
                 "https://api.github.com/repos/${UPSTREAM_REPO}/compare/${BASE_BRANCH}...${HEAD_OWNER}:${HEAD_BRANCH}")
           ahead=$(echo "$cmp" | jq -r '.ahead_by // 0')
+          if [ "$ahead" -le 0 ]; then echo "Not ahead"; exit 0; fi
 
-          if [ "${ahead}" -le 0 ]; then
-            echo "Not ahead (ahead_by=${ahead}). Nothing to PR."
-            exit 0
-          fi
-
-          # If a PR from this fork branch to upstream already exists and is open, do nothing.
           existing=$(gh pr list -R "${UPSTREAM_REPO}" \
-                       --head "${HEAD_OWNER}:${HEAD_BRANCH}" \
-                       --base "${BASE_BRANCH}" \
-                       --state open \
-                       --json number --jq '.[0].number')
-
+                       --head "${HEAD_OWNER}:${HEAD_BRANCH}" --base "${BASE_BRANCH}" \
+                       --state open --json number --jq '.[0].number')
           if [ -n "${existing}" ] && [ "${existing}" != "null" ]; then
-            echo "PR #${existing} already open; pushing more commits will update it automatically."
-            exit 0
+            echo "PR #${existing} already open"; exit 0
           fi
 
           title="Auto PR: ${HEAD_OWNER}:${HEAD_BRANCH} → ${UPSTREAM_REPO}:${BASE_BRANCH}"
-          body="This PR was created automatically because ${HEAD_OWNER}:${HEAD_BRANCH} is ahead of ${UPSTREAM_REPO}:${BASE_BRANCH}."
+          body="Created automatically because the fork branch is ahead."
 
-          # Create the PR in the upstream repository using GitHub CLI:
           gh pr create -R "${UPSTREAM_REPO}" \
             --base "${BASE_BRANCH}" \
             --head "${HEAD_OWNER}:${HEAD_BRANCH}" \
             --title "${title}" \
-            --body "${body}"
+            --body "${body}" \
+            --no-maintainer-edit
 
           echo "Opened a new PR to ${UPSTREAM_REPO}."
