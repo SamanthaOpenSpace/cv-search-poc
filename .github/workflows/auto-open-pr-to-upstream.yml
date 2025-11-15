@@ -17,33 +17,59 @@ jobs:
 
       - name: Create/Update PR to upstream if this branch is ahead
         env:
-          GH_TOKEN: ${{ secrets.UPSTREAM_PR_TOKEN }}   # your PAT
+          GH_TOKEN: ${{ secrets.UPSTREAM_PR_TOKEN }}   # PAT with public_repo or repo
           UPSTREAM_REPO: mikekozlov/cv-search-poc
           BASE_BRANCH: main
           HEAD_OWNER: ${{ github.repository_owner }}
           HEAD_BRANCH: ${{ github.ref_name }}
         run: |
           set -euo pipefail
-          cmp=$(curl -sSL -H "Accept: application/vnd.github+json" \
-                "https://api.github.com/repos/${UPSTREAM_REPO}/compare/${BASE_BRANCH}...${HEAD_OWNER}:${HEAD_BRANCH}")
+      
+          api()       { curl -sS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "$@"; }
+          api_post()  { curl -sS -X POST  -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "Content-Type: application/json" "$1" -d "$2"; }
+          api_patch() { curl -sS -X PATCH -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "Content-Type: application/json" "$1" -d "$2"; }
+      
+          # 1) ahead/behind check
+          cmp=$(api "https://api.github.com/repos/${UPSTREAM_REPO}/compare/${BASE_BRANCH}...${HEAD_OWNER}:${HEAD_BRANCH}")
           ahead=$(echo "$cmp" | jq -r '.ahead_by // 0')
-          if [ "$ahead" -le 0 ]; then echo "Not ahead"; exit 0; fi
-
-          existing=$(gh pr list -R "${UPSTREAM_REPO}" \
-                       --head "${HEAD_OWNER}:${HEAD_BRANCH}" --base "${BASE_BRANCH}" \
-                       --state open --json number --jq '.[0].number')
-          if [ -n "${existing}" ] && [ "${existing}" != "null" ]; then
-            echo "PR #${existing} already open"; exit 0
+          if [ "$ahead" -le 0 ]; then
+            echo "Not ahead (ahead_by=${ahead}). Nothing to PR."
+            exit 0
           fi
-
-          title="Auto PR: ${HEAD_OWNER}:${HEAD_BRANCH} → ${UPSTREAM_REPO}:${BASE_BRANCH}"
-          body="Created automatically because the fork branch is ahead."
-
-          gh pr create -R "${UPSTREAM_REPO}" \
-            --base "${BASE_BRANCH}" \
-            --head "${HEAD_OWNER}:${HEAD_BRANCH}" \
-            --title "${title}" \
-            --body "${body}" \
-            --no-maintainer-edit
-
-          echo "Opened a new PR to ${UPSTREAM_REPO}."
+      
+          # 2) Existing open PR from this fork branch?
+          pr_json=$(api "https://api.github.com/repos/${UPSTREAM_REPO}/pulls?state=open&head=${HEAD_OWNER}:${HEAD_BRANCH}&base=${BASE_BRANCH}")
+          pr_number=$(echo "$pr_json" | jq -r '.[0].number // empty')
+          if [ -n "$pr_number" ]; then
+            current_title=$(echo "$pr_json" | jq -r '.[0].title')
+            if ! printf '%s' "$current_title" | grep -qE '^mk-[0-9]+'; then
+              new_title="mk-${pr_number} ${current_title}"
+              api_patch "https://api.github.com/repos/${UPSTREAM_REPO}/pulls/${pr_number}" \
+                "$(jq -nc --arg t "$new_title" '{title:$t}')" > /dev/null
+              echo "Renamed existing PR #${pr_number} → ${new_title}"
+            else
+              echo "Existing PR #${pr_number} already prefixed."
+            fi
+            exit 0
+          fi
+      
+          # 3) Create PR (disable maintainer edits to avoid permission error)
+          temp_title="Auto PR: ${HEAD_OWNER}:${HEAD_BRANCH} → ${UPSTREAM_REPO}:${BASE_BRANCH}"
+          body="Created automatically because ${HEAD_OWNER}:${HEAD_BRANCH} is ahead of ${UPSTREAM_REPO}:${BASE_BRANCH}."
+      
+          created=$(api_post "https://api.github.com/repos/${UPSTREAM_REPO}/pulls" \
+            "$(jq -nc --arg head "${HEAD_OWNER}:${HEAD_BRANCH}" --arg base "${BASE_BRANCH}" \
+                      --arg title "$temp_title" --arg body "$body" \
+                      '{title:$title, head:$head, base:$base, body:$body, maintainer_can_modify:false}')")
+      
+          pr_number=$(echo "$created" | jq -r '.number')
+          if [ -z "$pr_number" ] || [ "$pr_number" = "null" ]; then
+            echo "Failed to create PR:"; echo "$created"; exit 1
+          fi
+      
+          # 4) Rename to start with mk-<number>
+          final_title="mk-${pr_number} ${temp_title}"
+          api_patch "https://api.github.com/repos/${UPSTREAM_REPO}/pulls/${pr_number}" \
+            "$(jq -nc --arg t "$final_title" '{title:$t}')" > /dev/null
+      
+          echo "Opened PR #${pr_number} → ${final_title}"
